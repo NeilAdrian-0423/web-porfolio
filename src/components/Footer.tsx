@@ -44,7 +44,7 @@ const Footer: React.FC = () => {
                 whileHover={{ rotate: 360 }}
                 transition={{ duration: 0.6 }}
               >
-                <Code2 className="w-8 h-8 text-blue-400" />
+                <Code2 className="w-8 h-8 text-[#ff8437]" />
               </motion.div>
               <span className="text-xl font-bold">Neil Adrian Balolong</span>
             </div>
@@ -155,7 +155,7 @@ const Footer: React.FC = () => {
             >
               <Heart className="w-4 h-4 text-red-500 fill-current" />
             </motion.div>
-            <span>by Neil Adrian Balolong • © 2024 All rights reserved.</span>
+            <span>by Neil Adrian Balolong • © 2025 All rights reserved.</span>
           </p>
         </motion.div>
       </div>
