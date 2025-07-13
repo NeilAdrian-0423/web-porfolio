@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin, Send, Github, Linkedin, MessageCircle } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, Github, Linkedin } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -66,15 +66,9 @@ const Contact: React.FC = () => {
     {
       icon: Linkedin,
       label: "LinkedIn", 
-      href: "www.linkedin.com/in/neil-adrian-balolong-5a68002b5",
+      href: "https://www.linkedin.com/in/neil-adrian-balolong-5a68002b5",
       color: "hover:text-blue-600"
     },
-    {
-      icon: MessageCircle,
-      label: "Discord",
-      href: "",
-      color: "hover:text-indigo-600"
-    }
   ];
 
   const containerVariants = {
@@ -147,8 +141,8 @@ const Contact: React.FC = () => {
                   transition={{ type: "spring", stiffness: 400, damping: 10 }}
                   className="flex items-center p-4 space-x-4 transition-colors duration-200 rounded-lg hover:bg-white group"
                 >
-                  <div className="p-3 transition-colors duration-200 bg-blue-100 rounded-lg group-hover:bg-blue-200">
-                    <info.icon className="w-6 h-6 text-blue-600" />
+                  <div className="p-3 transition-colors duration-200 bg-[#ffeadd] rounded-lg group-hover:bg-[#ffdbc4]">
+                    <info.icon className="w-6 h-6 text-[#ff8437]" />
                   </div>
                   <div>
                     <h4 className="font-semibold text-slate-900">{info.label}</h4>
@@ -166,6 +160,7 @@ const Contact: React.FC = () => {
                   <motion.a
                     key={social.label}
                     href={social.href}
+                    target='_blank'
                     whileHover={{ scale: 1.1, y: -2 }}
                     whileTap={{ scale: 0.9 }}
                     className={`bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 text-slate-600 ${social.color}`}
@@ -267,7 +262,7 @@ const Contact: React.FC = () => {
                       type="submit"
                       size="lg"
                       disabled={isSubmitting}
-                      className="w-full"
+                      className="w-full bg-[#ff8437] hover:bg-[#ff924f]"
                     >
                       {isSubmitting ? (
                         <motion.div
