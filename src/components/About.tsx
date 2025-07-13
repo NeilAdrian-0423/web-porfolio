@@ -11,28 +11,28 @@ const About: React.FC = () => {
       icon: Code2,
       color: "text-blue-600",
       bgColor: "bg-blue-50",
-      items: ["React", "TypeScript", "Next.js", "Tailwind CSS", "Framer Motion", "Zustand"]
+      items: ["React", "TypeScript", "Nuxt.js", "Tailwind CSS", "Framer Motion", "Zustand"]
     },
     {
       category: "Backend Development", 
       icon: Server,
       color: "text-green-600",
       bgColor: "bg-green-50",
-      items: ["Node.js", "Express", "Fastify", "REST APIs", "GraphQL", "Microservices"]
+      items: ["Node.js", "Express", "Laravel", "Code Igniter", "REST APIs", "Microservices"]
     },
     {
       category: "Database & Tools",
       icon: Database,
       color: "text-purple-600", 
       bgColor: "bg-purple-50",
-      items: ["PostgreSQL", "MongoDB", "Redis", "Prisma", "Docker", "Git"]
+      items: ["Mysql",  "Mariadb", "MongoDB", "Redis", "Prisma", "Docker", "Git"]
     },
     {
       category: "Mobile & Automation",
       icon: Smartphone,
       color: "text-orange-600",
       bgColor: "bg-orange-50", 
-      items: ["React Native", "PWA", "Go High Level", "n8n", "Zapier", "API Integration"]
+      items: ["React Native", "PWA", "Go High Level", "n8n", "API Integration"]
     }
   ];
 
@@ -107,7 +107,7 @@ const About: React.FC = () => {
             >
               {[
                 { number: "2+", label: "Years Coding", icon: Code2 },
-                { number: "25+", label: "Projects Built", icon: Globe },
+                { number: "15+", label: "Projects Built", icon: Globe },
                 { number: "10+", label: "Happy Clients", icon: Zap },
               ].map((stat) => (
                 <motion.div
