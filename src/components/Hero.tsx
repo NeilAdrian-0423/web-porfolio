@@ -123,7 +123,9 @@ const Hero: React.FC = () => {
                 variants={itemVariants}
                 className="flex flex-col items-center justify-center mb-12 space-y-4 sm:flex-row sm:space-y-0 sm:space-x-6"
               >
-                <motion.div
+                <motion.a
+                  href="/resume.pdf"
+                  download
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -132,7 +134,7 @@ const Hero: React.FC = () => {
                     Download Resume
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>
-                </motion.div>
+                </motion.a>
 
                 <div className="flex space-x-4">
                   {[
@@ -163,7 +165,7 @@ const Hero: React.FC = () => {
                 className="grid max-w-2xl grid-cols-1 gap-8 mx-auto mb-12 sm:grid-cols-3"
               >
                 {[
-                  { number: "2+", label: "Years Experience" },
+                  { number: "3+", label: "Years Experience" },
                   { number: "15+", label: "Projects Completed" },
                   { number: "100%", label: "Client Satisfaction" },
                 ].map((stat, index) => (

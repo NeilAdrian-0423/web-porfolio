@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import {  Github, Code2, Server, Smartphone, Zap, X, Play } from 'lucide-react';
+import {  Github, Code2, Server, Zap, X, Play } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -14,69 +14,70 @@ const Projects: React.FC = () => {
     {
       title: "Custom CRM",
       description: "This is the first project that I contributed to. I was task to add features fix bugs from that 6 years old project",
-      image: "https://images.pexels.com/photos/230544/pexels-photo-230544.jpeg?auto=compress&cs=tinysrgb&w=800",
+      image: "https://images.pexels.com/photos/669610/pexels-photo-669610.jpeg?auto=compress&cs=tinysrgb&w=800",
       technologies: ["Laravel", "Blade", "Jquery", "Bootstrap"],
       type: "Full-Stack",
       icon: Code2,
       // For Google Drive videos, use the embed format:
       // https://drive.google.com/file/d/YOUR_FILE_ID/preview
-      videoUrl: "https://drive.google.com/file/d/1234567890abcdef/preview",
+      videoUrl: "https://drive.google.com/file/d/1ouciPu5mv7LeJsOes6IxRGAQbsgb70CC/preview",
       githubUrl: "#",
       featured: true
     },
     {
       title: "Elder Care Website / Senior Care Website",
-      description: "This is my First React Project where I just translated the Figma design into code",
-      image: "https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=800",
-      technologies: ["React"],
+      description: "Our client tasked us to develop an elder care website. I was responsible for implementing the frontend, translating the provided Figma design (created by our UI/UX designer) into a fully functional React application.",
+      image: "https://images.pexels.com/photos/5790810/pexels-photo-5790810.jpeg?auto=compress&cs=tinysrgb&w=800",
+      technologies: ["V1: React, Bootstrap, V2: Vue, Tailwind CSS"],
       type: "Backend",
       icon: Server,
       // You can also use direct video URLs or YouTube embeds
-      videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+      videoUrl: "https://drive.google.com/file/d/1oDNg-aU0lIZUmRsLydOBgIXNqYPp4_7m/preview",
       githubUrl: "#",
       featured: true
     },
     {
       title: "HRIS",
       description: "This is our Capstone Project for our Course as BSIT students",
-      image: "https://images.pexels.com/photos/3184360/pexels-photo-3184360.jpeg?auto=compress&cs=tinysrgb&w=800",
+      image: "https://images.pexels.com/photos/13657523/pexels-photo-13657523.jpeg?auto=compress&cs=tinysrgb&w=800",
       technologies: ["React", "Django", "Kotlin", "Tailwind CSS", "Zustand"],
       type: "Frontend",
       icon: Code2,
-      videoUrl: "https://drive.google.com/file/d/0987654321fedcba/preview",
+      videoUrl: "https://drive.google.com/file/d/1ywKj-3QmoUPzV-cVM0ykBI13rQGl2egz/preview",
       githubUrl: "#",
       featured: false
     },
+    // {
+    //   title: "Mobile-First PWA",
+    //   description: "Progressive Web App with offline functionality, push notifications, and native-like experience. Optimized for mobile performance.",
+    //   image: "https://images.pexels.com/photos/3184339/pexels-photo-3184339.jpeg?auto=compress&cs=tinysrgb&w=800",
+    //   technologies: ["React", "PWA", "Service Workers", "IndexedDB", "Web Push"],
+    //   type: "Mobile",
+    //   icon: Smartphone,
+    //   videoUrl: "https://drive.google.com/file/d/abcdef1234567890/preview",
+    //   githubUrl: "#",
+    //   featured: false
+    // },
     {
-      title: "Mobile-First PWA",
-      description: "Progressive Web App with offline functionality, push notifications, and native-like experience. Optimized for mobile performance.",
-      image: "https://images.pexels.com/photos/3184339/pexels-photo-3184339.jpeg?auto=compress&cs=tinysrgb&w=800",
-      technologies: ["React", "PWA", "Service Workers", "IndexedDB", "Web Push"],
-      type: "Mobile",
-      icon: Smartphone,
-      videoUrl: "https://drive.google.com/file/d/abcdef1234567890/preview",
-      githubUrl: "#",
-      featured: false
-    },
-    {
-      title: "Real-time Chat Application",
-      description: "Full-stack chat application with real-time messaging, file sharing, user presence indicators, and message history.",
-      image: "https://images.pexels.com/photos/3184305/pexels-photo-3184305.jpeg?auto=compress&cs=tinysrgb&w=800",
+      title: "Blog Post",
+      description: "Implemented a masonry-style layout for client blog images and added lightbox functionality, enabling users to click on images for an enhanced, full-view experience.",
+      image: "https://images.pexels.com/photos/1591056/pexels-photo-1591056.jpeg?auto=compress&cs=tinysrgb&w=800",
       technologies: ["React", "Node.js", "Socket.io", "MongoDB", "Cloudinary"],
       type: "Full-Stack",
       icon: Code2,
-      videoUrl: "https://drive.google.com/file/d/fedcba0987654321/preview",
+      videoUrl: "https://drive.google.com/file/d/1g9VmiLF8gKrTxfzEAYEPKx0czE2ndD39/preview",
       githubUrl: "#",
-      featured: true
+      featured: false
     },
     {
-      title: "Business Automation Workflow",
-      description: "Custom automation solution using n8n and Go High Level for lead management, email sequences, and CRM integration.",
-      image: "https://images.pexels.com/photos/3184287/pexels-photo-3184287.jpeg?auto=compress&cs=tinysrgb&w=800",
-      technologies: ["n8n", "Go High Level", "Webhooks", "API Integration"],
+      title: "Meeting Transcription & Workflow Automation",
+      description:
+        "Built a Python-based automation that transcribes meeting recordings, extracts key takeaways using AI, and automatically creates a Notion page with Google Drive links to the full recording and transcription. Integrated ShareX for upload monitoring and n8n for workflow automation.",
+      image: "https://images.pexels.com/photos/159298/gears-cogs-machine-machinery-159298.jpeg?auto=compress&cs=tinysrgb&w=800",
+      technologies: ["Python", "n8n", "Webhooks", "Notion API", "Google Drive API"],
       type: "Automation",
       icon: Zap,
-      videoUrl: "https://drive.google.com/file/d/1122334455667788/preview",
+      videoUrl: "https://drive.google.com/file/d/1Tj9R7CEO3bAagC1vFZTwxWd3DAtkevWk/preview",
       githubUrl: "#",
       featured: false
     }
@@ -279,9 +280,9 @@ const Projects: React.FC = () => {
                           <Play className="w-4 h-4" />
                         </Button>
                         <Button variant="ghost" size="sm" asChild className="p-2">
-                          <a href={project.githubUrl}>
+                          {/* <a href={project.githubUrl}>
                             <Github className="w-4 h-4" />
-                          </a>
+                          </a> */}
                         </Button>
                       </div>
                     </CardContent>

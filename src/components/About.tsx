@@ -106,7 +106,7 @@ const About: React.FC = () => {
               viewport={{ once: true }}
             >
               {[
-                { number: "2+", label: "Years Coding", icon: Code2 },
+                { number: "3+", label: "Years Coding", icon: Code2 },
                 { number: "15+", label: "Projects Built", icon: Globe },
                 { number: "10+", label: "Happy Clients", icon: Zap },
               ].map((stat) => (
