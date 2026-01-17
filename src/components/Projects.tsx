@@ -58,7 +58,7 @@ const Projects: React.FC = () => {
       featured: false
     },
     {
-      title: "Blog Post",
+      title: "Blog Post Website with Image Gallery",
       description: "Implemented a masonry-style layout for client blog images and added lightbox functionality, enabling users to click on images for an enhanced, full-view experience.",
       image: "https://images.pexels.com/photos/1591056/pexels-photo-1591056.jpeg?auto=compress&cs=tinysrgb&w=800",
       technologies: ["React", "Node.js", "Socket.io", "MongoDB", "Cloudinary"],
