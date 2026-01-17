@@ -1,6 +1,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Code2, Server, Database, Smartphone, Zap, Globe } from 'lucide-react';
+import {
+  Code24Regular,
+  Server24Regular,
+  Database24Regular,
+  Settings24Regular,
+  Flash24Filled,
+  Globe24Regular
+} from '@fluentui/react-icons';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
@@ -8,31 +15,31 @@ const About: React.FC = () => {
   const skills = [
     {
       category: "Frontend Development",
-      icon: Code2,
+      icon: Code24Regular,
       color: "text-blue-600",
       bgColor: "bg-blue-50",
-      items: ["React", "TypeScript", "Nuxt.js", "Tailwind CSS", "Framer Motion", "Zustand"]
+      items: ["HTML5/CSS3", "JavaScript", "TypeScript", "React.js", "Vue.js", "Zustand", "Pinia", "Tailwind CSS"]
     },
     {
-      category: "Backend Development", 
-      icon: Server,
+      category: "Backend Development",
+      icon: Server24Regular,
       color: "text-green-600",
       bgColor: "bg-green-50",
-      items: ["Node.js", "Express", "Laravel", "Code Igniter", "REST APIs", "Microservices"]
+      items: ["Node.js", "Laravel", "MySQL", "PostgreSQL", "REST APIs"]
     },
     {
-      category: "Database & Tools",
-      icon: Database,
-      color: "text-purple-600", 
+      category: "CMS & Platforms",
+      icon: Database24Regular,
+      color: "text-purple-600",
       bgColor: "bg-purple-50",
-      items: ["Mysql",  "Mariadb", "MongoDB", "Redis", "Prisma", "Docker", "Git"]
+      items: ["WordPress", "WooCommerce", "Elementor", "Go High Level"]
     },
     {
-      category: "Mobile & Automation",
-      icon: Smartphone,
+      category: "DevOps & Automation",
+      icon: Settings24Regular,
       color: "text-orange-600",
-      bgColor: "bg-orange-50", 
-      items: ["React Native", "PWA", "Go High Level", "n8n", "API Integration"]
+      bgColor: "bg-orange-50",
+      items: ["Git", "Docker", "Nginx", "SSL", "CI/CD", "Digital Ocean", "n8n", "Python"]
     }
   ];
 
@@ -73,8 +80,8 @@ const About: React.FC = () => {
             About Me
           </h2>
           <p className="max-w-3xl mx-auto text-xl text-slate-600">
-            A passionate full-stack developer focused on creating efficient, scalable solutions 
-            with modern web technologies and clean, maintainable code.
+            A Full Stack Web Developer with 2+ years of experience building scalable web applications,
+            managing digital infrastructure, and delivering modern solutions using Laravel, React, Vue.js, and Node.js.
           </p>
         </motion.div>
 
@@ -88,17 +95,17 @@ const About: React.FC = () => {
           >
             <h3 className="text-2xl font-bold text-slate-900">My Development Journey</h3>
             <p className="leading-relaxed text-slate-600">
-              As a dedicated full-stack developer, I specialize in building modern web applications 
-              using React and Node.js. My passion lies in creating seamless user experiences backed 
-              by robust, scalable server architectures.
+              Currently serving as a Full Stack Web Developer at Rooche Digital, where I manage 20+ company
+              and client websites, build internal tools and automation systems, and serve as the primary
+              DevOps engineer handling deployments, Docker environments, DNS, and server management.
             </p>
             <p className="leading-relaxed text-slate-600">
-              I believe in writing clean, maintainable code and staying current with the latest 
-              technologies. Whether it's crafting responsive frontends or designing efficient APIs, 
-              I approach every project with attention to detail and a focus on performance.
+              Previously at Page One 247/Sumo Media, I designed 15+ client websites, maintained a legacy
+              Laravel CRM, and built multiple client-facing apps using Laravel and Vue.js. I bring hands-on
+              experience with AI-assisted development, n8n workflows, and full-stack architecture.
             </p>
-            
-            <motion.div 
+
+            <motion.div
               className="grid grid-cols-3 gap-6 pt-6"
               variants={containerVariants}
               initial="hidden"
@@ -106,9 +113,9 @@ const About: React.FC = () => {
               viewport={{ once: true }}
             >
               {[
-                { number: "3+", label: "Years Coding", icon: Code2 },
-                { number: "15+", label: "Projects Built", icon: Globe },
-                { number: "10+", label: "Happy Clients", icon: Zap },
+                { number: "2+", label: "Years Coding", icon: Code24Regular },
+                { number: "35+", label: "Projects Built", icon: Globe24Regular },
+                { number: "20+", label: "Sites Managed", icon: Flash24Filled },
               ].map((stat) => (
                 <motion.div
                   key={stat.label}
@@ -124,7 +131,7 @@ const About: React.FC = () => {
               ))}
             </motion.div>
           </motion.div>
-          
+
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -137,12 +144,12 @@ const About: React.FC = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 {[
-                  "Modern React development with hooks and context",
-                  "Scalable Node.js backend architecture",
-                  "Database design and optimization",
-                  "RESTful API development and integration",
-                  "Responsive design and mobile-first approach",
-                  "Performance optimization and best practices"
+                  "Full-stack development with Laravel, React, and Vue.js",
+                  "DevOps & server management (Nginx, Docker, SSL, DigitalOcean)",
+                  "WordPress development and WooCommerce solutions",
+                  "Workflow automation with n8n and custom integrations",
+                  "Legacy system maintenance and modernization",
+                  "Performance optimization and SEO best practices"
                 ].map((item, index) => (
                   <motion.div
                     key={index}

@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Code2, Home, User, Briefcase, Mail } from 'lucide-react';
+import {
+  Navigation24Regular,
+  Dismiss24Regular,
+  Code24Filled,
+  Home24Regular,
+  Person24Regular,
+  Briefcase24Regular,
+  Mail24Regular,
+  // Clock24Regular
+} from '@fluentui/react-icons';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -17,18 +26,31 @@ const Header: React.FC = () => {
   }, []);
 
   const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      setIsMenuOpen(false);
-    }
+    // Close menu first on mobile
+    setIsMenuOpen(false);
+
+    // Small delay to let menu close animation complete
+    setTimeout(() => {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        const headerHeight = 80; // Account for fixed header
+        const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+        const offsetPosition = elementPosition - headerHeight;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    }, 100);
   };
 
   const navItems = [
-    { id: 'home', label: 'Home', icon: Home },
-    { id: 'about', label: 'About', icon: User },
-    { id: 'projects', label: 'Projects', icon: Briefcase },
-    { id: 'contact', label: 'Contact', icon: Mail },
+    { id: 'home', label: 'Home', icon: Home24Regular },
+    { id: 'about', label: 'About', icon: Person24Regular },
+    // { id: 'experience', label: 'Experience', icon: Clock24Regular },
+    { id: 'projects', label: 'Projects', icon: Briefcase24Regular },
+    { id: 'contact', label: 'Contact', icon: Mail24Regular },
   ];
 
   return (
@@ -38,19 +60,19 @@ const Header: React.FC = () => {
       transition={{ duration: 0.6, ease: "easeOut" }}
       className={cn(
         "fixed top-0 w-full z-50 transition-all duration-300",
-        isScrolled 
-          ? "bg-background/95 backdrop-blur-sm border-b shadow-sm" 
+        isScrolled
+          ? "bg-background/95 backdrop-blur-sm border-b shadow-sm"
           : "bg-transparent"
       )}
     >
       <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div className="flex items-center justify-between py-4">
-          <motion.div 
+          <motion.div
             className="flex items-center space-x-2"
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 400, damping: 10 }}
           >
-            <Code2 className={cn(
+            <Code24Filled className={cn(
               "h-8 w-8 transition-colors duration-300",
               isScrolled ? "text-[#FF8437]" : "text-white"
             )} />
@@ -76,12 +98,12 @@ const Header: React.FC = () => {
                   onClick={() => scrollToSection(id)}
                   className={cn(
                     "flex items-center space-x-2 transition-all duration-200",
-                    isScrolled 
-                      ? "text-[#FF8437] hover:text-foreground hover:bg-accent" 
+                    isScrolled
+                      ? "text-[#FF8437] hover:text-foreground hover:bg-accent"
                       : "text-white/80 hover:text-white hover:bg-white/10"
                   )}
                 >
-                  <Icon className="w-4 h-4" />
+                  <Icon className="w-5 h-5" />
                   <span>{label}</span>
                 </Button>
               </motion.div>
@@ -106,7 +128,7 @@ const Header: React.FC = () => {
                 exit={{ rotate: 90, opacity: 0 }}
                 transition={{ duration: 0.2 }}
               >
-                {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                {isMenuOpen ? <Dismiss24Regular className="w-6 h-6" /> : <Navigation24Regular className="w-6 h-6" />}
               </motion.div>
             </AnimatePresence>
           </Button>
