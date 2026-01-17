@@ -22,10 +22,18 @@ const LinkedinIcon = ({ className }: { className?: string }) => (
 );
 
 interface HeroProps {
-  onVideoLoaded?: () => void;
+  onAssetLoaded?: () => void;
 }
 
-const Hero: React.FC<HeroProps> = ({ onVideoLoaded }) => {
+const Hero: React.FC<HeroProps> = ({ onAssetLoaded }) => {
+  const [videoLoaded, setVideoLoaded] = React.useState(false);
+  const [imageLoaded, setImageLoaded] = React.useState(false);
+
+  React.useEffect(() => {
+    if (videoLoaded && imageLoaded && onAssetLoaded) {
+      onAssetLoaded();
+    }
+  }, [videoLoaded, imageLoaded, onAssetLoaded]);
   const scrollToNext = () => {
     const aboutSection = document.getElementById('about');
     if (aboutSection) {
@@ -75,8 +83,8 @@ const Hero: React.FC<HeroProps> = ({ onVideoLoaded }) => {
         loop
         muted
         playsInline
-        onCanPlayThrough={onVideoLoaded}
-        onLoadedData={onVideoLoaded}
+        onCanPlayThrough={() => setVideoLoaded(true)}
+        onLoadedData={() => setVideoLoaded(true)}
         className="absolute top-0 left-0 w-full h-full object-cover z-[-1]"
       >
         <source src="/BG.mp4" type="video/mp4" />
@@ -134,6 +142,7 @@ const Hero: React.FC<HeroProps> = ({ onVideoLoaded }) => {
                       src="/portrait.webp"
                       alt="Portrait"
                       className="h-[200px] sm:h-[450px] w-auto object-contain mx-auto"
+                      onLoad={() => setImageLoaded(true)}
                     />
                   </div>
                 </div>
