@@ -131,7 +131,7 @@ const Hero: React.FC<HeroProps> = ({ onVideoLoaded }) => {
                     }}
                   >
                     <img
-                      src="/rembg sample 3.png"
+                      src="/portrait.webp"
                       alt="Portrait"
                       className="h-[200px] sm:h-[450px] w-auto object-contain mx-auto"
                     />
