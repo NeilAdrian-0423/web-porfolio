@@ -110,6 +110,29 @@ const Hero: React.FC = () => {
               animate="visible"
               className="max-w-5xl mx-auto text-center text-white"
             >
+              {/* Portrait Image at top */}
+              <motion.div variants={itemVariants} className="mb-6">
+                <div className="relative inline-block">
+                  {/* Orange accent glow behind image */}
+                  <div className="absolute inset-0 bg-[#FF8437]/30 blur-2xl rounded-full scale-75" />
+
+                  {/* Image container with mask */}
+                  <div
+                    className="relative overflow-hidden rounded-b-[100px]"
+                    style={{
+                      maskImage: 'linear-gradient(to bottom, black 50%, transparent 100%)',
+                      WebkitMaskImage: 'linear-gradient(to bottom, black 50%, transparent 100%)',
+                    }}
+                  >
+                    <img
+                      src="/rembg sample 3.png"
+                      alt="Portrait"
+                      className="h-[200px] sm:h-[450px] w-auto object-contain mx-auto"
+                    />
+                  </div>
+                </div>
+              </motion.div>
+
               <motion.div variants={itemVariants}>
                 <motion.h1
                   className="mb-6 text-4xl font-bold leading-tight sm:text-6xl lg:text-7xl"
