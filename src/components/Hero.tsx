@@ -101,19 +101,19 @@ const Hero: React.FC<HeroProps> = ({ onAssetLoaded }) => {
             <motion.div
               variants={floatingVariants}
               animate="animate"
-              className="absolute rounded-full top-1/4 left-1/4 w-72 h-72 bg-blue-500/10 blur-3xl"
+              className="absolute rounded-full top-1/4 left-1/4 w-72 h-72 bg-[#FF8437]/15 blur-3xl"
             />
             <motion.div
               variants={floatingVariants}
               animate="animate"
               transition={{ delay: 2 }}
-              className="absolute rounded-full bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 blur-3xl"
+              className="absolute rounded-full bottom-1/4 right-1/4 w-96 h-96 bg-[#FF6B1A]/10 blur-3xl"
             />
             <motion.div
               variants={floatingVariants}
               animate="animate"
               transition={{ delay: 4 }}
-              className="absolute w-64 h-64 transform -translate-x-1/2 -translate-y-1/2 rounded-full top-1/2 left-1/2 bg-cyan-500/10 blur-3xl"
+              className="absolute w-64 h-64 transform -translate-x-1/2 -translate-y-1/2 rounded-full top-1/2 left-1/2 bg-[#FFa500]/10 blur-3xl"
             />
           </div>
 
