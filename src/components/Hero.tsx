@@ -147,7 +147,7 @@ const Hero: React.FC<HeroProps> = ({ onAssetLoaded }) => {
                     <img
                       src="/portrait.webp"
                       alt="Portrait"
-                      className="h-[200px] sm:h-[450px] w-auto object-contain mx-auto"
+                      className="h-[400px] sm:h-[450px] w-auto object-contain mx-auto"
                       onLoad={() => setImageLoaded(true)}
                     />
                   </div>
