@@ -47,7 +47,7 @@ function App() {
 
       <div className="font-inter">
         <Header />
-        <Hero onAssetLoaded={handleVideoLoaded} />
+        <Hero onAssetLoaded={handleVideoLoaded} isLoaded={!isLoading} />
         <About />
         {/* <Experience /> */}
         <Projects />

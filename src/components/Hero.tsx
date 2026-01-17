@@ -29,9 +29,10 @@ const WhatsappIcon = ({ className }: { className?: string }) => (
 
 interface HeroProps {
   onAssetLoaded?: () => void;
+  isLoaded?: boolean;
 }
 
-const Hero: React.FC<HeroProps> = ({ onAssetLoaded }) => {
+const Hero: React.FC<HeroProps> = ({ onAssetLoaded, isLoaded = false }) => {
   const [videoLoaded, setVideoLoaded] = React.useState(false);
   const [imageLoaded, setImageLoaded] = React.useState(false);
 
@@ -100,7 +101,7 @@ const Hero: React.FC<HeroProps> = ({ onAssetLoaded }) => {
         <motion.div
           variants={containerVariants}
           initial="hidden"
-          animate="visible"
+          animate={isLoaded ? "visible" : "hidden"}
           className="text-center text-white"
         >
           <div className="absolute inset-0">
@@ -127,7 +128,7 @@ const Hero: React.FC<HeroProps> = ({ onAssetLoaded }) => {
             <motion.div
               variants={containerVariants}
               initial="hidden"
-              animate="visible"
+              animate={isLoaded ? "visible" : "hidden"}
               className="max-w-5xl mx-auto text-center text-white"
             >
               {/* Portrait Image at top */}
