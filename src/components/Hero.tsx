@@ -21,7 +21,11 @@ const LinkedinIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const Hero: React.FC = () => {
+interface HeroProps {
+  onVideoLoaded?: () => void;
+}
+
+const Hero: React.FC<HeroProps> = ({ onVideoLoaded }) => {
   const scrollToNext = () => {
     const aboutSection = document.getElementById('about');
     if (aboutSection) {
@@ -71,6 +75,8 @@ const Hero: React.FC = () => {
         loop
         muted
         playsInline
+        onCanPlayThrough={onVideoLoaded}
+        onLoadedData={onVideoLoaded}
         className="absolute top-0 left-0 w-full h-full object-cover z-[-1]"
       >
         <source src="/BG.mp4" type="video/mp4" />
