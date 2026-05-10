@@ -1,17 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import {
   Mail24Regular,
   Call24Regular,
   Location24Regular,
-  Send24Filled
 } from '@fluentui/react-icons';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Separator } from '@/components/ui/separator';
-import toast from 'react-hot-toast';
 
 // Social icons (Fluent UI doesn't include brand logos)
 const GithubIcon = ({ className }: { className?: string }) => (
@@ -33,47 +26,6 @@ const WhatsappIcon = ({ className }: { className?: string }) => (
 );
 
 const Contact: React.FC = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      const response = await fetch('https://formspree.io/f/xrbgpjgk', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      });
-
-      if (response.ok) {
-        toast.success('Message sent successfully!');
-        setFormData({ name: '', email: '', subject: '', message: '' });
-      } else {
-        toast.error('Failed to send message. Please try again.');
-      }
-    } catch {
-      toast.error('An error occurred. Please try again.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
-
   const contactInfo = [
     {
       icon: Mail24Regular,
@@ -140,8 +92,17 @@ const Contact: React.FC = () => {
   };
 
   return (
-    <section id="contact" className="py-20 bg-slate-50">
-      <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+    <section id="contact" className="relative py-24 overflow-hidden bg-slate-950">
+      {/* Ambient glow */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(ellipse at center, rgba(255,132,55,0.12) 0%, transparent 60%)',
+        }}
+      />
+
+      <div className="relative px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -149,25 +110,28 @@ const Contact: React.FC = () => {
           transition={{ duration: 0.6 }}
           className="mb-16 text-center"
         >
-          <h2 className="mb-4 text-3xl font-bold sm:text-4xl text-slate-900">
+          <p className="font-mono text-xs tracking-widest text-[#FF8437] uppercase mb-3">
+            Contact
+          </p>
+          <h2 className="mb-4 text-4xl font-bold sm:text-5xl text-white">
             Get In Touch
           </h2>
-          <p className="max-w-3xl mx-auto text-xl text-slate-600">
+          <p className="max-w-3xl mx-auto text-lg text-slate-400">
             Have a project in mind or want to discuss opportunities? I'd love to hear from you.
             Let's create something amazing together.
           </p>
         </motion.div>
 
-        <div className="grid gap-12 lg:grid-cols-2">
+        <div className="max-w-2xl mx-auto">
           {/* Contact Info */}
           <motion.div
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="space-y-8"
+            className="space-y-6"
           >
-            <motion.div variants={itemVariants} className="p-6 space-y-4 bg-white rounded-xl">
+            <motion.div variants={itemVariants} className="p-6 space-y-2 bg-slate-900/50 border border-white/10 backdrop-blur-sm rounded-xl">
               {contactInfo.map((info, index) => (
                 <motion.a
                   key={index}
@@ -176,21 +140,21 @@ const Contact: React.FC = () => {
                   rel="noopener noreferrer"
                   whileHover={{ x: 5 }}
                   transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                  className="flex items-center p-4 space-x-4 transition-colors duration-200 rounded-lg hover:bg-white group"
+                  className="flex items-center p-4 space-x-4 transition-colors duration-200 rounded-lg hover:bg-white/5 group"
                 >
-                  <div className="p-3 transition-colors duration-200 bg-[#ffeadd] rounded-lg group-hover:bg-[#ffdbc4]">
-                    <info.icon className="w-6 h-6 text-[#ff8437]" />
+                  <div className="p-3 transition-colors duration-200 bg-[#FF8437]/10 border border-[#FF8437]/20 rounded-lg group-hover:bg-[#FF8437]/20">
+                    <info.icon className="w-6 h-6 text-[#FF8437]" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-slate-900">{info.label}</h4>
-                    <p className="text-slate-600">{info.value}</p>
+                    <h4 className="font-semibold text-white">{info.label}</h4>
+                    <p className="text-slate-400">{info.value}</p>
                   </div>
                 </motion.a>
               ))}
             </motion.div>
 
-            <motion.div variants={itemVariants} className="p-6 bg-white rounded-xl">
-              <h3 className="mb-4 text-lg font-semibold text-slate-900">Connect With Me</h3>
+            <motion.div variants={itemVariants} className="p-6 bg-slate-900/50 border border-white/10 backdrop-blur-sm rounded-xl">
+              <h3 className="mb-4 text-lg font-semibold text-white">Connect With Me</h3>
               <div className="flex space-x-4">
                 {socialLinks.map((social) => (
                   <motion.a
@@ -199,7 +163,7 @@ const Contact: React.FC = () => {
                     target='_blank'
                     whileHover={{ scale: 1.1, y: -2 }}
                     whileTap={{ scale: 0.9 }}
-                    className={`bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 text-slate-600 ${social.color}`}
+                    className="p-3 transition-all duration-200 rounded-lg bg-white/5 border border-white/10 text-slate-300 hover:bg-[#FF8437]/10 hover:border-[#FF8437]/30 hover:text-[#FF8437]"
                     aria-label={social.label}
                   >
                     <social.icon className="w-6 h-6" />
@@ -207,138 +171,6 @@ const Contact: React.FC = () => {
                 ))}
               </div>
             </motion.div>
-          </motion.div>
-
-          {/* Contact Form */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <Card className="bg-white border-0 shadow-lg">
-              <CardHeader>
-                <CardTitle className="text-xl">Send a Message</CardTitle>
-                <CardDescription>
-                  Fill out the form below and I'll get back to you as soon as possible.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 0.3 }}
-                    >
-                      <label htmlFor="name" className="block mb-2 text-sm font-medium text-slate-700">
-                        Name
-                      </label>
-                      <Input
-                        id="name"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        placeholder="Your name"
-                        required
-                        className="transition-all duration-200 focus:ring-2 focus:ring-[#ff8437]"
-                      />
-                    </motion.div>
-
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 0.4 }}
-                    >
-                      <label htmlFor="email" className="block mb-2 text-sm font-medium text-slate-700">
-                        Email
-                      </label>
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        placeholder="your.email@example.com"
-                        required
-                        className="transition-all duration-200 focus:ring-2 focus:ring-[#ff8437]"
-                      />
-                    </motion.div>
-                  </div>
-
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.5 }}
-                  >
-                    <label htmlFor="subject" className="block mb-2 text-sm font-medium text-slate-700">
-                      Subject
-                    </label>
-                    <Input
-                      id="subject"
-                      name="subject"
-                      value={formData.subject}
-                      onChange={handleChange}
-                      placeholder="What's this about?"
-                      required
-                      className="transition-all duration-200 focus:ring-2 focus:ring-[#ff8437]"
-                    />
-                  </motion.div>
-
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.6 }}
-                  >
-                    <label htmlFor="message" className="block mb-2 text-sm font-medium text-slate-700">
-                      Message
-                    </label>
-                    <Textarea
-                      id="message"
-                      name="message"
-                      value={formData.message}
-                      onChange={handleChange}
-                      placeholder="Tell me about your project..."
-                      required
-                      rows={5}
-                      className="transition-all duration-200 focus:ring-2 focus:ring-[#ff8437]"
-                    />
-                  </motion.div>
-
-                  <Separator />
-
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.7 }}
-                  >
-                    <Button
-                      type="submit"
-                      className="w-full bg-[#ff8437] hover:bg-[#ff924f]"
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? (
-                        <motion.div
-                          animate={{ rotate: 360 }}
-                          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                          className="w-5 h-5 border-2 border-white rounded-full border-t-transparent"
-                        />
-                      ) : (
-                        <>
-                          <Send24Filled className="w-5 h-5 mr-2" />
-                          Send Message
-                        </>
-                      )}
-                    </Button>
-                  </motion.div>
-                </form>
-              </CardContent>
-            </Card>
           </motion.div>
         </div>
       </div>
