@@ -1,0 +1,1059 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HRIS Dashboard — Demo Preview</title>
+  <meta name="robots" content="noindex" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    html, body { font-family: 'Inter', system-ui, sans-serif; }
+    @keyframes slideInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .view { animation: slideInUp 0.35s ease-out both; }
+    .stat-card { animation: slideInUp 0.5s ease-out both; }
+    .stripes { background-image: repeating-linear-gradient(45deg, rgba(250,204,21,0.18) 0 14px, rgba(0,0,0,0) 14px 28px); }
+    [hidden] { display: none !important; }
+    @keyframes pulseDot { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.3); opacity: 0.7; } }
+    .pulse-dot { animation: pulseDot 1.5s ease-in-out infinite; }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-indigo-50 via-white to-cyan-50 min-h-screen">
+
+  <!-- Demo banner -->
+  <div class="stripes border-b border-yellow-300/60">
+    <div class="px-4 py-2 text-xs sm:text-sm font-semibold text-yellow-900 flex items-center justify-center gap-2 text-center">
+      <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-yellow-400 text-yellow-950 shrink-0">
+        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+        DEMO MODE
+      </span>
+      <span class="hidden sm:inline">Static preview with fictional data — nothing is wired to a backend.</span>
+    </div>
+  </div>
+
+  <div class="flex">
+
+    <!-- Sidebar -->
+    <aside class="hidden lg:flex flex-col w-64 h-[calc(100vh-36px)] sticky top-[36px] bg-white/80 backdrop-blur-xl border-r border-gray-200/50 shadow-xl">
+      <div class="flex items-center justify-center gap-3 p-6 border-b border-gray-200/50">
+        <div class="w-[62px] h-[62px] rounded-2xl bg-gradient-to-br from-indigo-500 to-cyan-500 flex items-center justify-center text-white font-black text-2xl shadow-lg shadow-indigo-500/30">B</div>
+        <div>
+          <div class="font-bold text-gray-900 leading-tight">BioLock</div>
+          <div class="text-xs text-gray-500">HRIS · v1.0</div>
+        </div>
+      </div>
+
+      <div class="px-6 pt-6 pb-4">
+        <div class="flex items-center gap-3">
+          <div id="profile-avatar" class="w-12 h-12 rounded-full bg-gradient-to-r from-pink-400 to-purple-500 flex items-center justify-center text-white font-semibold">DA</div>
+          <div>
+            <h3 id="profile-name" class="font-semibold text-gray-900">Demo Admin</h3>
+            <p id="profile-role" class="text-sm text-gray-500">HR Administrator</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Role toggle -->
+      <div class="px-6 pb-4">
+        <div class="text-[10px] uppercase tracking-wider font-bold text-gray-400 mb-1.5">View as (demo)</div>
+        <div class="grid grid-cols-2 gap-1 p-1 rounded-xl bg-gray-100/80 border border-gray-200">
+          <button data-role="admin"    class="role-btn text-xs font-semibold py-1.5 rounded-lg transition-all">Admin</button>
+          <button data-role="employee" class="role-btn text-xs font-semibold py-1.5 rounded-lg transition-all">Employee</button>
+        </div>
+      </div>
+
+      <nav id="sidebar-nav" class="flex-1 px-4 pb-4 space-y-1 overflow-y-auto"></nav>
+
+      <div class="p-4 border-t border-gray-200/50">
+        <button class="flex items-center w-full gap-3 px-4 py-3 text-gray-600 hover:bg-red-50 hover:text-red-600 rounded-xl">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span class="font-medium">Log-out</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="flex-1 p-4 sm:p-6 lg:p-8 min-w-0">
+      <div class="max-w-7xl mx-auto">
+
+        <!-- Mobile selector + role toggle -->
+        <div class="lg:hidden mb-4 space-y-2">
+          <div class="grid grid-cols-2 gap-1 p-1 rounded-xl bg-white/80 border border-gray-200" id="mobile-role-toggle">
+            <button data-role="admin"    class="role-btn text-xs font-semibold py-2 rounded-lg">Admin</button>
+            <button data-role="employee" class="role-btn text-xs font-semibold py-2 rounded-lg">Employee</button>
+          </div>
+          <select id="mobile-tab" class="w-full p-3 rounded-xl border border-gray-200 bg-white/80 font-semibold text-gray-700"></select>
+        </div>
+
+        <!-- ============== DASHBOARD (admin variant) ============== -->
+        <section data-view="dashboard" class="view space-y-8" data-role-view="admin">
+          <div class="relative">
+            <div class="absolute inset-0 bg-gradient-to-r from-indigo-500/10 to-cyan-500/10 rounded-3xl blur-3xl"></div>
+            <div class="relative p-6 sm:p-8 border shadow-xl bg-white/40 backdrop-blur-xl rounded-3xl border-white/20">
+              <div class="flex items-center justify-between gap-4">
+                <div>
+                  <h1 class="mb-2 text-3xl sm:text-4xl font-bold text-gray-900">Welcome Back! 👋</h1>
+                  <div class="flex items-center gap-2 text-base sm:text-xl font-medium text-gray-600">
+                    <span id="js-date">—</span><span>·</span><span id="js-clock">—</span>
+                  </div>
+                  <p class="mt-2 text-gray-600">Here's what's happening with your team today.</p>
+                </div>
+                <div class="hidden md:flex w-24 h-24 bg-gradient-to-r from-indigo-500 to-cyan-500 rounded-2xl items-center justify-center shadow-lg shadow-indigo-500/30">
+                  <svg class="w-12 h-12 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="stats" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"></div>
+
+          <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <div class="p-6 sm:p-8 border shadow-xl bg-white/40 backdrop-blur-xl rounded-3xl border-white/20">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-bold text-gray-900">Team Performance</h3>
+                <span class="text-xs px-2 py-1 rounded-full bg-yellow-100 text-yellow-800 font-semibold">SAMPLE</span>
+              </div>
+              <div class="h-64 rounded-2xl bg-gradient-to-br from-indigo-50 to-cyan-50 p-4">
+                <svg viewBox="0 0 320 200" class="w-full h-full">
+                  <defs><linearGradient id="g1" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient></defs>
+                  <g stroke="#cbd5e1" stroke-dasharray="2 4"><line x1="20" y1="40" x2="310" y2="40"/><line x1="20" y1="80" x2="310" y2="80"/><line x1="20" y1="120" x2="310" y2="120"/><line x1="20" y1="160" x2="310" y2="160"/></g>
+                  <g fill="url(#g1)">
+                    <rect x="30"  y="90"  width="28" height="70"  rx="6"/><rect x="70"  y="60"  width="28" height="100" rx="6"/>
+                    <rect x="110" y="105" width="28" height="55"  rx="6"/><rect x="150" y="40"  width="28" height="120" rx="6"/>
+                    <rect x="190" y="75"  width="28" height="85"  rx="6"/><rect x="230" y="55"  width="28" height="105" rx="6"/>
+                    <rect x="270" y="80"  width="28" height="80"  rx="6"/>
+                  </g>
+                  <g fill="#64748b" font-size="10" text-anchor="middle">
+                    <text x="44"  y="180">Mon</text><text x="84"  y="180">Tue</text><text x="124" y="180">Wed</text>
+                    <text x="164" y="180">Thu</text><text x="204" y="180">Fri</text><text x="244" y="180">Sat</text><text x="284" y="180">Sun</text>
+                  </g>
+                </svg>
+              </div>
+            </div>
+
+            <div class="p-6 sm:p-8 border shadow-xl bg-white/40 backdrop-blur-xl rounded-3xl border-white/20">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-bold text-gray-900">Recent Activity</h3>
+                <span class="text-xs px-2 py-1 rounded-full bg-yellow-100 text-yellow-800 font-semibold">SAMPLE</span>
+              </div>
+              <div class="space-y-3" id="activity"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============== DASHBOARD (employee variant) ============== -->
+        <section data-view="dashboard" class="view space-y-6" data-role-view="employee" hidden>
+          <div class="relative">
+            <div class="absolute inset-0 bg-gradient-to-r from-indigo-500/10 to-cyan-500/10 rounded-3xl blur-3xl"></div>
+            <div class="relative p-6 sm:p-8 border shadow-xl bg-white/40 backdrop-blur-xl rounded-3xl border-white/20">
+              <div class="flex items-center justify-between gap-4">
+                <div>
+                  <h1 class="mb-2 text-3xl sm:text-4xl font-bold text-gray-900">Hi, Demo Employee 👋</h1>
+                  <div class="flex items-center gap-2 text-base sm:text-xl font-medium text-gray-600">
+                    <span id="js-date-2">—</span><span>·</span><span id="js-clock-2">—</span>
+                  </div>
+                  <p class="mt-2 text-gray-600">Have a great day at work today!</p>
+                </div>
+                <div class="relative">
+                  <button class="p-3 rounded-2xl bg-white/80 hover:bg-white border border-gray-200">
+                    <svg class="w-7 h-7 text-gray-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Clock In/Out card -->
+          <div class="bg-white rounded-3xl shadow-xl p-6 sm:p-8 border border-white/40">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+              <div class="bg-indigo-50 border-l-4 border-indigo-500 p-4 rounded flex-1">
+                <p id="quote" class="italic text-gray-700">"—"</p>
+              </div>
+
+              <div class="flex flex-col items-center sm:items-end gap-3">
+                <div id="clock-status-pill" class="hidden items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold">
+                  <span class="w-2 h-2 rounded-full pulse-dot"></span>
+                  <span id="clock-status-text"></span>
+                </div>
+                <button id="clock-btn" class="flex items-center gap-2 px-7 py-3 rounded-full text-white font-semibold transition-colors bg-emerald-600 hover:bg-emerald-700 shadow-lg shadow-emerald-500/30">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  <span id="clock-btn-label">Clock In</span>
+                </button>
+                <button id="reset-clock" class="text-xs text-gray-400 hover:text-gray-600 underline">reset (demo)</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Time tracker -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="p-5 rounded-2xl bg-white/80 border border-gray-200 shadow">
+              <div class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">Clock In</div>
+              <div id="tt-clockin" class="text-2xl font-extrabold text-gray-900 tabular-nums">--:--</div>
+              <div id="tt-clockin-date" class="text-xs text-gray-400 mt-1">—</div>
+            </div>
+            <div class="p-5 rounded-2xl bg-white/80 border border-gray-200 shadow">
+              <div class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">Clock Out</div>
+              <div id="tt-clockout" class="text-2xl font-extrabold text-gray-900 tabular-nums">--:--</div>
+              <div id="tt-clockout-date" class="text-xs text-gray-400 mt-1">—</div>
+            </div>
+            <div class="p-5 rounded-2xl bg-gradient-to-br from-indigo-500 to-cyan-500 text-white shadow-lg shadow-indigo-500/30">
+              <div class="text-xs font-semibold uppercase tracking-wider opacity-90 mb-2">Hours Worked</div>
+              <div id="tt-hours" class="text-2xl font-extrabold tabular-nums">0h 00m 00s</div>
+              <div class="text-xs opacity-80 mt-1">live timer</div>
+            </div>
+          </div>
+
+          <!-- Leave balance + upcoming -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="p-6 sm:p-8 border shadow-xl bg-white/40 backdrop-blur-xl rounded-3xl border-white/20">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-bold text-gray-900">Leave Balance</h3>
+                <span class="text-xs px-2 py-1 rounded-full bg-yellow-100 text-yellow-800 font-semibold">SAMPLE</span>
+              </div>
+              <div class="grid grid-cols-3 gap-3">
+                <div class="p-4 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 text-white">
+                  <div class="text-xs font-semibold uppercase opacity-90">Sick</div>
+                  <div class="text-3xl font-extrabold mt-1">7</div>
+                  <div class="text-xs opacity-80">of 10 left</div>
+                </div>
+                <div class="p-4 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 text-white">
+                  <div class="text-xs font-semibold uppercase opacity-90">Vacation</div>
+                  <div class="text-3xl font-extrabold mt-1">12</div>
+                  <div class="text-xs opacity-80">of 15 left</div>
+                </div>
+                <div class="p-4 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 text-white">
+                  <div class="text-xs font-semibold uppercase opacity-90">Emergency</div>
+                  <div class="text-3xl font-extrabold mt-1">3</div>
+                  <div class="text-xs opacity-80">of 3 left</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-6 sm:p-8 border shadow-xl bg-white/40 backdrop-blur-xl rounded-3xl border-white/20">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-bold text-gray-900">My Recent Activity</h3>
+                <span class="text-xs px-2 py-1 rounded-full bg-yellow-100 text-yellow-800 font-semibold">SAMPLE</span>
+              </div>
+              <div class="space-y-3">
+                <div class="flex items-center gap-3 p-3 bg-white/60 rounded-xl border border-white/50">
+                  <div class="w-2 h-2 rounded-full bg-gradient-to-r from-indigo-500 to-cyan-500"></div>
+                  <p class="text-sm text-gray-700 flex-1"><span class="font-semibold text-gray-900">You</span> submitted a leave request</p>
+                  <span class="text-xs text-gray-400">Yesterday</span>
+                </div>
+                <div class="flex items-center gap-3 p-3 bg-white/60 rounded-xl border border-white/50">
+                  <div class="w-2 h-2 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500"></div>
+                  <p class="text-sm text-gray-700 flex-1"><span class="font-semibold text-gray-900">You</span> clocked in at 8:55 AM</p>
+                  <span class="text-xs text-gray-400">2 days ago</span>
+                </div>
+                <div class="flex items-center gap-3 p-3 bg-white/60 rounded-xl border border-white/50">
+                  <div class="w-2 h-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500"></div>
+                  <p class="text-sm text-gray-700 flex-1"><span class="font-semibold text-gray-900">You</span> updated your profile picture</p>
+                  <span class="text-xs text-gray-400">Last week</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============== TIMESHEET ============== -->
+        <section data-view="timesheet" class="view space-y-6" hidden>
+          <div class="p-6 sm:p-8 border shadow-xl bg-white/40 backdrop-blur-xl rounded-3xl border-white/20">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+              <div>
+                <h2 id="timesheet-title" class="text-2xl font-bold text-gray-900">Timesheet</h2>
+                <p id="timesheet-subtitle" class="text-sm text-gray-500 mt-1">Daily attendance and clock-in/out records.</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <input type="date" value="2025-11-10" class="px-4 py-2 rounded-xl border border-gray-200 bg-white/70 text-sm font-medium text-gray-700"/>
+                <button class="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-500 to-teal-500 text-white text-sm font-semibold shadow-lg shadow-cyan-500/30">Filter</button>
+              </div>
+            </div>
+
+            <div id="timesheet-table"></div>
+          </div>
+        </section>
+
+        <!-- ============== LEAVE REQUEST ============== -->
+        <section data-view="leave" class="view space-y-6" hidden>
+          <div class="p-6 sm:p-8 border shadow-xl bg-white/40 backdrop-blur-xl rounded-3xl border-white/20">
+            <div class="flex items-center justify-between mb-6">
+              <div>
+                <h2 id="leave-title" class="text-2xl font-bold text-gray-900">Leave Requests</h2>
+                <p id="leave-subtitle" class="text-sm text-gray-500 mt-1">Review and respond to time-off requests.</p>
+              </div>
+              <button id="leave-new-btn" class="hidden px-4 py-2 rounded-xl bg-gradient-to-r from-blue-500 to-teal-500 text-white text-sm font-semibold shadow-lg shadow-cyan-500/30">+ New Request</button>
+            </div>
+
+            <div id="leave-stats" class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6"></div>
+
+            <div class="flex flex-col sm:flex-row gap-3 mb-4">
+              <input placeholder="Search..." class="flex-1 px-4 py-2 rounded-xl border border-gray-200 bg-white/70 text-sm"/>
+              <div class="flex gap-2">
+                <button class="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-500 to-teal-500 text-white text-sm font-semibold">All</button>
+                <button class="px-4 py-2 rounded-xl bg-white/70 border border-gray-200 text-sm font-semibold text-gray-700">Today</button>
+                <button class="px-4 py-2 rounded-xl bg-white/70 border border-gray-200 text-sm font-semibold text-gray-700">Upcoming</button>
+              </div>
+            </div>
+
+            <div id="leave-table"></div>
+          </div>
+        </section>
+
+        <!-- ============== PAYROLL ============== -->
+        <section data-view="payroll" class="view space-y-6" hidden>
+          <div class="p-6 sm:p-8 border shadow-xl bg-white/40 backdrop-blur-xl rounded-3xl border-white/20">
+            <div class="flex items-center justify-between mb-6">
+              <div>
+                <h2 class="text-2xl font-bold text-gray-900">Payroll</h2>
+                <p class="text-sm text-gray-500 mt-1">Salaries, periods, releases, and holiday config.</p>
+              </div>
+              <button class="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-500 to-teal-500 text-white text-sm font-semibold shadow-lg shadow-cyan-500/30">+ New Period</button>
+            </div>
+
+            <div class="flex gap-2 mb-4 border-b border-gray-200 overflow-x-auto">
+              <button class="px-4 py-2 text-sm font-semibold text-indigo-600 border-b-2 border-indigo-500 whitespace-nowrap">User Salary</button>
+              <button class="px-4 py-2 text-sm font-semibold text-gray-500 hover:text-gray-700 whitespace-nowrap">Payroll Period</button>
+              <button class="px-4 py-2 text-sm font-semibold text-gray-500 hover:text-gray-700 whitespace-nowrap">Payroll Release</button>
+              <button class="px-4 py-2 text-sm font-semibold text-gray-500 hover:text-gray-700 whitespace-nowrap">Holiday Config</button>
+            </div>
+
+            <div class="overflow-x-auto rounded-xl border border-gray-200 bg-white/70 backdrop-blur-sm">
+              <table class="w-full text-sm">
+                <thead class="bg-gradient-to-r from-indigo-50 to-cyan-50 text-gray-700">
+                  <tr>
+                    <th class="px-4 py-3 text-left font-semibold">Employee</th>
+                    <th class="px-4 py-3 text-left font-semibold">Position</th>
+                    <th class="px-4 py-3 text-right font-semibold">Base Salary</th>
+                    <th class="px-4 py-3 text-right font-semibold">Allowance</th>
+                    <th class="px-4 py-3 text-right font-semibold">Deductions</th>
+                    <th class="px-4 py-3 text-right font-semibold">Net Pay</th>
+                  </tr>
+                </thead>
+                <tbody id="payroll-rows" class="divide-y divide-gray-100"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============== OVERTIME ============== -->
+        <section data-view="overtime" class="view space-y-6" hidden>
+          <div class="p-6 sm:p-8 border shadow-xl bg-white/40 backdrop-blur-xl rounded-3xl border-white/20">
+            <div class="flex items-center justify-between mb-6">
+              <div>
+                <h2 class="text-2xl font-bold text-gray-900">Pending Overtime Requests</h2>
+                <p class="text-sm text-gray-500 mt-1">Approve or reject submitted overtime hours.</p>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto rounded-xl border border-gray-200 bg-white/70 backdrop-blur-sm">
+              <table class="w-full text-sm">
+                <thead class="bg-gradient-to-r from-indigo-50 to-cyan-50 text-gray-700">
+                  <tr>
+                    <th class="px-4 py-3 text-left font-semibold">Date</th>
+                    <th class="px-4 py-3 text-left font-semibold">Employee</th>
+                    <th class="px-4 py-3 text-left font-semibold">Hours</th>
+                    <th class="px-4 py-3 text-left font-semibold">Submitted</th>
+                    <th class="px-4 py-3 text-left font-semibold">Status</th>
+                    <th class="px-4 py-3 text-left font-semibold">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="overtime-rows" class="divide-y divide-gray-100"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============== REPORTS (placeholder) ============== -->
+        <section data-view="reports" class="view" hidden></section>
+
+        <!-- ============== USERS ============== -->
+        <section data-view="users" class="view space-y-6" hidden>
+          <div class="p-6 sm:p-8 border shadow-xl bg-white/40 backdrop-blur-xl rounded-3xl border-white/20">
+            <div class="flex items-center justify-between mb-6">
+              <div>
+                <h2 class="text-2xl font-bold text-gray-900">Registration Requests</h2>
+                <p class="text-sm text-gray-500 mt-1">Approve newly registered users before granting access.</p>
+              </div>
+              <button class="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-500 to-teal-500 text-white text-sm font-semibold shadow-lg shadow-cyan-500/30">+ Send Registration Link</button>
+            </div>
+
+            <div class="overflow-x-auto rounded-xl border border-gray-200 bg-white/70 backdrop-blur-sm">
+              <table class="w-full text-sm">
+                <thead class="bg-gradient-to-r from-indigo-50 to-cyan-50 text-gray-700">
+                  <tr>
+                    <th class="px-4 py-3 text-left font-semibold">ID</th>
+                    <th class="px-4 py-3 text-left font-semibold">Date</th>
+                    <th class="px-4 py-3 text-left font-semibold">Name</th>
+                    <th class="px-4 py-3 text-left font-semibold">Email</th>
+                    <th class="px-4 py-3 text-left font-semibold">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="users-pending-rows" class="divide-y divide-gray-100"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="p-6 sm:p-8 border shadow-xl bg-white/40 backdrop-blur-xl rounded-3xl border-white/20">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Approved Users</h2>
+            <div class="overflow-x-auto rounded-xl border border-gray-200 bg-white/70 backdrop-blur-sm">
+              <table class="w-full text-sm">
+                <thead class="bg-gradient-to-r from-indigo-50 to-cyan-50 text-gray-700">
+                  <tr>
+                    <th class="px-4 py-3 text-left font-semibold">ID</th>
+                    <th class="px-4 py-3 text-left font-semibold">Name</th>
+                    <th class="px-4 py-3 text-left font-semibold">Username</th>
+                    <th class="px-4 py-3 text-left font-semibold">Email</th>
+                    <th class="px-4 py-3 text-left font-semibold">Department</th>
+                    <th class="px-4 py-3 text-left font-semibold"></th>
+                  </tr>
+                </thead>
+                <tbody id="users-approved-rows" class="divide-y divide-gray-100"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============== DEPARTMENTS ============== -->
+        <section data-view="departments" class="view space-y-6" hidden>
+          <div class="p-6 sm:p-8 border shadow-xl bg-white/40 backdrop-blur-xl rounded-3xl border-white/20">
+            <div class="flex items-center justify-between mb-6">
+              <div>
+                <h2 class="text-2xl font-bold text-gray-900">Departments</h2>
+                <p class="text-sm text-gray-500 mt-1">Organize employees into business units.</p>
+              </div>
+            </div>
+
+            <div class="flex gap-2 mb-6">
+              <input placeholder="New department name..." class="flex-1 px-4 py-2 rounded-xl border border-gray-200 bg-white/70 text-sm"/>
+              <button class="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-500 to-teal-500 text-white text-sm font-semibold shadow-lg shadow-cyan-500/30">Add</button>
+            </div>
+
+            <ul id="departments-list" class="divide-y divide-gray-100 rounded-xl border border-gray-200 bg-white/70 backdrop-blur-sm"></ul>
+          </div>
+        </section>
+
+        <!-- ============== POSITION (placeholder) ============== -->
+        <section data-view="position" class="view" hidden></section>
+
+        <!-- ============== SYSTEM LOGS (placeholder) ============== -->
+        <section data-view="logs" class="view" hidden></section>
+
+        <footer class="pt-6 pb-2 text-center text-xs text-gray-400">
+          BioLock HRIS — static demo · React + Django + Tailwind · <span class="font-semibold text-gray-500">All names and numbers are fictional.</span>
+        </footer>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // ============ STORAGE KEYS (zustand-style persist via localStorage) ============
+    const LS = {
+      role:     'biolock-demo-role',
+      clockIn:  'biolock-demo-clockIn',
+      clockOut: 'biolock-demo-clockOut',
+    };
+
+    // ============ ROLE STATE ============
+    const allTabs = [
+      { id: "dashboard",   name: "Dashboard",     badge: 0, roles: ['admin', 'employee'],
+        icon: '<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>' },
+      { id: "timesheet",   name: "Timesheet",     badge: 0, roles: ['admin', 'employee'],
+        icon: '<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>' },
+      { id: "leave",       name: "Leave Request", badge: 3, roles: ['admin', 'employee'],
+        icon: '<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>' },
+      { id: "payroll",     name: "Payroll",       badge: 0, roles: ['admin'],
+        icon: '<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4H4v16h16zM12 8v8M8 12h8"/></svg>' },
+      { id: "overtime",    name: "Overtime",      badge: 2, roles: ['admin'],
+        icon: '<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' },
+      { id: "reports",     name: "Reports",       badge: 0, roles: ['admin'],
+        icon: '<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg>' },
+      { id: "users",       name: "Users",         badge: 1, roles: ['admin'],
+        icon: '<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>' },
+      { id: "departments", name: "Departments",   badge: 0, roles: ['admin'],
+        icon: '<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/></svg>' },
+      { id: "position",    name: "Position",      badge: 0, roles: ['admin'],
+        icon: '<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>' },
+      { id: "logs",        name: "System Logs",   badge: 0, roles: ['admin'],
+        icon: '<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>' },
+    ];
+
+    const profiles = {
+      admin:    { name: 'Demo Admin',    role: 'HR Administrator',    initials: 'DA', gradient: 'from-pink-400 to-purple-500' },
+      employee: { name: 'Demo Employee', role: 'Software Engineer',   initials: 'DE', gradient: 'from-blue-400 to-cyan-500' },
+    };
+
+    let currentRole = localStorage.getItem(LS.role) === 'employee' ? 'employee' : 'admin';
+    let currentTab  = (location.hash || '#dashboard').slice(1);
+
+    // ============ NAV / TAB RENDER ============
+    const nav = document.getElementById('sidebar-nav');
+    const mobileSel = document.getElementById('mobile-tab');
+
+    function visibleTabs() {
+      return allTabs.filter(t => t.roles.includes(currentRole));
+    }
+
+    function renderNav() {
+      const items = visibleTabs();
+      nav.innerHTML = items.map(t => `
+        <a href="#${t.id}" data-tab="${t.id}" class="tab-link w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100/80 hover:text-gray-900 transition-all">
+          ${t.icon}
+          <span class="font-medium">${t.name}</span>
+          ${t.badge > 0 ? `<span class="ml-auto bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-md">${t.badge}</span>` : ''}
+        </a>`).join('');
+      mobileSel.innerHTML = items.map(t => `<option value="${t.id}">${t.name}${t.badge>0?` (${t.badge})`:''}</option>`).join('');
+    }
+
+    function setTab(id) {
+      const allowed = visibleTabs().map(t => t.id);
+      if (!allowed.includes(id)) id = 'dashboard';
+      currentTab = id;
+
+      // Show/hide sections, picking the right role variant for sections that have one
+      document.querySelectorAll('section[data-view]').forEach(s => {
+        const matches = s.dataset.view === id;
+        const hasRoleVariant = s.dataset.roleView !== undefined;
+        if (!matches) { s.hidden = true; return; }
+        if (hasRoleVariant) s.hidden = s.dataset.roleView !== currentRole;
+        else s.hidden = false;
+      });
+
+      document.querySelectorAll('.tab-link').forEach(a => {
+        const active = a.dataset.tab === id;
+        a.className = `tab-link w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${active
+          ? 'bg-gradient-to-r from-indigo-500 to-cyan-500 text-white shadow-lg shadow-indigo-500/25'
+          : 'text-gray-600 hover:bg-gray-100/80 hover:text-gray-900'}`;
+      });
+      mobileSel.value = id;
+      const tab = allTabs.find(t => t.id === id);
+      document.title = `${tab?.name || 'Dashboard'} — HRIS Demo`;
+    }
+
+    function applyRole() {
+      const p = profiles[currentRole];
+      document.getElementById('profile-name').textContent  = p.name;
+      document.getElementById('profile-role').textContent  = p.role;
+      const av = document.getElementById('profile-avatar');
+      av.textContent = p.initials;
+      av.className = `w-12 h-12 rounded-full bg-gradient-to-r ${p.gradient} flex items-center justify-center text-white font-semibold`;
+
+      document.querySelectorAll('.role-btn').forEach(b => {
+        const active = b.dataset.role === currentRole;
+        b.className = `role-btn text-xs font-semibold py-1.5 sm:py-1.5 rounded-lg transition-all ${active
+          ? 'bg-white shadow text-indigo-600'
+          : 'text-gray-600 hover:text-gray-800'}`;
+      });
+
+      // Tweak titles in shared views to match audience
+      const lt = document.getElementById('leave-title');
+      const ls = document.getElementById('leave-subtitle');
+      const lb = document.getElementById('leave-new-btn');
+      const tt = document.getElementById('timesheet-title');
+      const ts = document.getElementById('timesheet-subtitle');
+      if (currentRole === 'employee') {
+        lt.textContent = 'My Leave Requests';
+        ls.textContent = 'Track the status of your time-off submissions.';
+        lb.classList.remove('hidden');
+        tt.textContent = 'My Timesheet';
+        ts.textContent = 'Your daily attendance log.';
+      } else {
+        lt.textContent = 'Leave Requests';
+        ls.textContent = 'Review and respond to time-off requests.';
+        lb.classList.add('hidden');
+        tt.textContent = 'Timesheet';
+        ts.textContent = 'Daily attendance and clock-in/out records.';
+      }
+
+      renderNav();
+      setTab(currentTab);
+      if (typeof renderTimesheet === 'function') renderTimesheet();
+      if (typeof renderLeave === 'function') renderLeave();
+    }
+
+    function setRole(role) {
+      if (role !== 'admin' && role !== 'employee') return;
+      currentRole = role;
+      localStorage.setItem(LS.role, role);
+      applyRole();
+      // If currently clocked-in dashboard is up, refresh clock UI
+      renderClock();
+    }
+
+    document.querySelectorAll('.role-btn').forEach(b => {
+      b.addEventListener('click', () => setRole(b.dataset.role));
+    });
+
+    // ============ NAV HANDLERS ============
+    document.body.addEventListener('click', e => {
+      const a = e.target.closest('a[data-tab]');
+      if (!a) return;
+      e.preventDefault();
+      const id = a.dataset.tab;
+      history.replaceState(null, '', `#${id}`);
+      setTab(id);
+    });
+    mobileSel.addEventListener('change', e => {
+      history.replaceState(null, '', `#${e.target.value}`);
+      setTab(e.target.value);
+    });
+
+    // ============ DEMO BANNERS for placeholder views ============
+    const placeholderHtml = (title) => `
+      <div class="p-10 sm:p-16 border shadow-xl bg-white/40 backdrop-blur-xl rounded-3xl border-white/20 text-center">
+        <div class="mx-auto w-20 h-20 rounded-2xl bg-gradient-to-r from-indigo-500 to-cyan-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30 mb-6">
+          <svg class="w-10 h-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">${title}</h2>
+        <p class="max-w-xl mx-auto text-gray-600">You are in <span class="font-semibold text-yellow-700">demo mode</span>. Please contact the developer for more info or to see this view in the live build.</p>
+        <div class="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-yellow-100 text-yellow-800 text-sm font-semibold">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+          Demo view — not implemented in this preview
+        </div>
+      </div>`;
+    document.querySelector('[data-view="reports"]').innerHTML  = placeholderHtml('Reports');
+    document.querySelector('[data-view="position"]').innerHTML = placeholderHtml('Positions');
+    document.querySelector('[data-view="logs"]').innerHTML     = placeholderHtml('System Logs');
+
+    // ============ DASHBOARD STATS (admin) ============
+    const stats = [
+      { title: "Total Employees",   count: 42, gradient: "from-blue-500 to-cyan-500",
+        icon: '<svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>' },
+      { title: "Leave Requests",    count: 3,  gradient: "from-emerald-500 to-teal-500",
+        icon: '<svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>' },
+      { title: "Absent Today",      count: 2,  gradient: "from-orange-500 to-red-500",
+        icon: '<svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="17" y1="8" x2="23" y2="14"/><line x1="23" y1="8" x2="17" y2="14"/></svg>' },
+      { title: "Currently Working", count: 31, gradient: "from-purple-500 to-pink-500",
+        icon: '<svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>' },
+      { title: "Day Off",           count: 4,  gradient: "from-indigo-500 to-purple-500",
+        icon: '<svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>' },
+      { title: "On Leave",          count: 2,  gradient: "from-amber-500 to-orange-500",
+        icon: '<svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>' },
+    ];
+    document.getElementById('stats').innerHTML = stats.map((s, i) => `
+      <a href="#" class="stat-card block group" style="animation-delay:${i * 80}ms">
+        <div class="relative overflow-hidden p-6 border border-white/40 shadow-xl bg-white/60 backdrop-blur-xl rounded-3xl transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-2xl">
+          <div class="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-gradient-to-br ${s.gradient} opacity-20 blur-2xl"></div>
+          <div class="flex items-start justify-between gap-4 relative">
+            <div>
+              <p class="text-sm font-medium text-gray-500">${s.title}</p>
+              <p class="mt-2 text-4xl font-extrabold text-gray-900 tabular-nums">${s.count}</p>
+              <p class="mt-1 text-xs font-semibold uppercase tracking-wide text-yellow-700 bg-yellow-100 inline-block px-2 py-0.5 rounded-full">demo data</p>
+            </div>
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-r ${s.gradient} text-white flex items-center justify-center shadow-lg">${s.icon}</div>
+          </div>
+        </div>
+      </a>`).join('');
+
+    // ============ ACTIVITY ============
+    document.getElementById('activity').innerHTML = [
+      { who: "Juan dela Cruz",     what: "submitted a leave request",  when: "2 min ago", color: "from-emerald-500 to-teal-500" },
+      { who: "Maria Santos",       what: "checked in at 9:00 AM",       when: "1 hr ago",  color: "from-indigo-500 to-cyan-500" },
+      { who: "Pedro Reyes",        what: "completed overtime (2 hrs)",  when: "3 hrs ago", color: "from-purple-500 to-pink-500" },
+      { who: "Ana Lim",            what: "updated her profile picture", when: "Yesterday", color: "from-amber-500 to-orange-500" },
+      { who: "Demo Employee #007", what: "clocked out at 6:02 PM",      when: "Yesterday", color: "from-orange-500 to-red-500" },
+    ].map(a => `
+      <div class="flex items-center gap-3 p-3 bg-white/60 rounded-xl border border-white/50">
+        <div class="w-2 h-2 rounded-full bg-gradient-to-r ${a.color}"></div>
+        <p class="text-sm text-gray-700 flex-1"><span class="font-semibold text-gray-900">${a.who}</span> ${a.what}</p>
+        <span class="text-xs text-gray-400">${a.when}</span>
+      </div>`).join('');
+
+    // ============ CLOCK (header) ============
+    const updateHeaderClock = () => {
+      const now = new Date();
+      const d = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      const t = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+      set('js-date', d); set('js-clock', t); set('js-date-2', d); set('js-clock-2', t);
+    };
+    updateHeaderClock();
+    setInterval(updateHeaderClock, 1000);
+
+    // ============ MOTIVATIONAL QUOTE ============
+    const workQuotes = [
+      "Success is not final, failure is not fatal: It is the courage to continue that counts.",
+      "The best way to get started is to quit talking and begin doing.",
+      "Don't let yesterday take up too much of today.",
+      "You learn more from failure than from success.",
+      "Hard times create strong people.",
+      "Effort is what leads you to mastery.",
+      "Work hard in silence, let success make the noise.",
+      "Opportunities don't happen, you create them.",
+      "Your time is limited, so don't waste it living someone else's life.",
+      "Start where you are. Use what you have. Do what you can.",
+    ];
+    document.getElementById('quote').textContent = `"${workQuotes[Math.floor(Math.random() * workQuotes.length)]}"`;
+
+    // ============ CLOCK IN/OUT (persisted in localStorage) ============
+    const sameDay = (iso) => {
+      if (!iso) return false;
+      const d = new Date(iso); const now = new Date();
+      return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth() && d.getDate() === now.getDate();
+    };
+
+    function getClockState() {
+      let inT = localStorage.getItem(LS.clockIn);
+      let outT = localStorage.getItem(LS.clockOut);
+      if (inT && !sameDay(inT)) {  // stale: clear out so a new day starts fresh
+        localStorage.removeItem(LS.clockIn);
+        localStorage.removeItem(LS.clockOut);
+        inT = null; outT = null;
+      }
+      if (outT && !sameDay(outT)) outT = null;
+      return { inT, outT };
+    }
+
+    function fmtTime(iso) {
+      return new Date(iso).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    }
+    function fmtDateShort(iso) {
+      return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+    function fmtDuration(ms) {
+      const total = Math.max(0, Math.floor(ms / 1000));
+      const h = Math.floor(total / 3600);
+      const m = Math.floor((total % 3600) / 60);
+      const s = total % 60;
+      return `${h}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s`;
+    }
+
+    function renderClock() {
+      const { inT, outT } = getClockState();
+      const btn = document.getElementById('clock-btn');
+      const lbl = document.getElementById('clock-btn-label');
+      const pill = document.getElementById('clock-status-pill');
+      const pillText = document.getElementById('clock-status-text');
+      if (!btn) return;
+
+      if (!inT) {
+        btn.disabled = false;
+        btn.className = 'flex items-center gap-2 px-7 py-3 rounded-full text-white font-semibold transition-colors bg-emerald-600 hover:bg-emerald-700 shadow-lg shadow-emerald-500/30';
+        lbl.textContent = 'Clock In';
+        pill.classList.add('hidden'); pill.classList.remove('flex');
+      } else if (inT && !outT) {
+        btn.disabled = false;
+        btn.className = 'flex items-center gap-2 px-7 py-3 rounded-full text-white font-semibold transition-colors bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/30';
+        lbl.textContent = 'Clock Out';
+        pill.classList.remove('hidden'); pill.classList.add('flex');
+        pill.classList.add('bg-emerald-100', 'text-emerald-700');
+        pill.classList.remove('bg-gray-100', 'text-gray-600');
+        pill.querySelector('span').className = 'w-2 h-2 rounded-full pulse-dot bg-emerald-500';
+        pillText.textContent = 'Currently working';
+      } else {
+        btn.disabled = true;
+        btn.className = 'flex items-center gap-2 px-7 py-3 rounded-full text-white font-semibold bg-gray-300 cursor-not-allowed';
+        lbl.textContent = 'Done for the day';
+        pill.classList.remove('hidden'); pill.classList.add('flex');
+        pill.classList.add('bg-gray-100', 'text-gray-600');
+        pill.classList.remove('bg-emerald-100', 'text-emerald-700');
+        pill.querySelector('span').className = 'w-2 h-2 rounded-full bg-gray-400';
+        pillText.textContent = 'Clocked out';
+      }
+
+      const $ = (id) => document.getElementById(id);
+      $('tt-clockin').textContent       = inT  ? fmtTime(inT)       : '--:--';
+      $('tt-clockin-date').textContent  = inT  ? fmtDateShort(inT)  : '—';
+      $('tt-clockout').textContent      = outT ? fmtTime(outT)      : '--:--';
+      $('tt-clockout-date').textContent = outT ? fmtDateShort(outT) : '—';
+
+      const start = inT ? new Date(inT).getTime() : null;
+      const end   = outT ? new Date(outT).getTime() : Date.now();
+      $('tt-hours').textContent = start ? fmtDuration(end - start) : '0h 00m 00s';
+    }
+
+    document.getElementById('clock-btn').addEventListener('click', () => {
+      const { inT, outT } = getClockState();
+      if (!inT) {
+        localStorage.setItem(LS.clockIn, new Date().toISOString());
+      } else if (!outT) {
+        if (confirm('Clock out for the day?')) {
+          localStorage.setItem(LS.clockOut, new Date().toISOString());
+        }
+      }
+      renderClock();
+    });
+    document.getElementById('reset-clock').addEventListener('click', () => {
+      localStorage.removeItem(LS.clockIn);
+      localStorage.removeItem(LS.clockOut);
+      renderClock();
+    });
+    setInterval(() => {
+      const { inT, outT } = getClockState();
+      if (inT && !outT) renderClock();
+    }, 1000);
+
+    // ============ TIMESHEET ROWS ============
+    const statusBadge = (s) => {
+      const map = {
+        present:  'bg-green-100 text-green-700',
+        late:     'bg-yellow-100 text-yellow-700',
+        absent:   'bg-red-100 text-red-700',
+        leave:    'bg-purple-100 text-purple-700',
+        approved: 'bg-green-100 text-green-700',
+        pending:  'bg-yellow-100 text-yellow-700',
+        rejected: 'bg-red-100 text-red-700',
+      };
+      return `<span class="px-2 py-0.5 rounded-full text-xs font-semibold capitalize ${map[s.toLowerCase()] || 'bg-gray-100 text-gray-700'}">${s}</span>`;
+    };
+    const avatar = (name, gradient) => {
+      const initials = name.split(' ').map(n => n[0]).slice(0,2).join('');
+      return `<div class="w-8 h-8 rounded-full bg-gradient-to-r ${gradient} flex items-center justify-center text-white text-xs font-semibold">${initials}</div>`;
+    };
+    // ============ TIMESHEET (role-aware) ============
+    const timesheetAdmin = [
+      // [Name, gradient, ClockIn, ClockOut, Hours, OT, Status]
+      ['Maria Santos',     'from-pink-400 to-purple-500',     '08:55 AM', '06:01 PM', '8h 06m', '0h 06m', 'Present'],
+      ['Juan dela Cruz',   'from-blue-400 to-cyan-500',       '09:12 AM', '06:30 PM', '8h 18m', '0h 30m', 'Late'],
+      ['Pedro Reyes',      'from-emerald-400 to-teal-500',    '08:30 AM', '08:00 PM', '10h 30m','2h 00m', 'Present'],
+      ['Ana Lim',          'from-amber-400 to-orange-500',    '—',        '—',        '—',     '—',     'Leave'],
+      ['Demo Employee #007','from-indigo-400 to-cyan-500',    '—',        '—',        '—',     '—',     'Absent'],
+      ['Sample Worker',    'from-purple-400 to-pink-500',     '08:00 AM', '05:00 PM', '8h 00m','0h',     'Present'],
+    ];
+    const timesheetSelf = [
+      // [Date, Day, ClockIn, ClockOut, Hours, OT, Status]
+      ['Nov 10', 'Mon', '08:55 AM', '06:01 PM', '8h 06m', '0h 06m', 'Present'],
+      ['Nov 09', 'Sun', '—',        '—',        '—',     '—',      'Day Off'],
+      ['Nov 08', 'Sat', '—',        '—',        '—',     '—',      'Day Off'],
+      ['Nov 07', 'Fri', '09:12 AM', '06:00 PM', '7h 48m', '0h 00m', 'Late'],
+      ['Nov 06', 'Thu', '08:30 AM', '07:30 PM', '10h 00m','1h 30m', 'Present'],
+      ['Nov 05', 'Wed', '08:50 AM', '05:55 PM', '8h 05m', '0h 05m', 'Present'],
+      ['Nov 04', 'Tue', '—',        '—',        '—',     '—',      'Absent'],
+    ];
+
+    function renderTimesheet() {
+      const isAdmin = currentRole === 'admin';
+      const headers = isAdmin
+        ? ['Employee', 'Clock In', 'Clock Out', 'Working Hours', 'Overtime', 'Status']
+        : ['Date', 'Clock In', 'Clock Out', 'Working Hours', 'Overtime', 'Status'];
+      const body = isAdmin
+        ? timesheetAdmin.map(r => `
+            <tr class="hover:bg-indigo-50/40">
+              <td class="px-4 py-3"><div class="flex items-center gap-2">${avatar(r[0], r[1])}<span class="font-medium text-gray-800">${r[0]}</span></div></td>
+              <td class="px-4 py-3 text-gray-600 tabular-nums">${r[2]}</td>
+              <td class="px-4 py-3 text-gray-600 tabular-nums">${r[3]}</td>
+              <td class="px-4 py-3 text-gray-600 tabular-nums">${r[4]}</td>
+              <td class="px-4 py-3 text-gray-600 tabular-nums">${r[5]}</td>
+              <td class="px-4 py-3">${statusBadge(r[6])}</td>
+            </tr>`).join('')
+        : timesheetSelf.map(r => `
+            <tr class="hover:bg-indigo-50/40">
+              <td class="px-4 py-3"><div class="font-medium text-gray-800">${r[0]} <span class="text-xs font-normal text-gray-400">${r[1]}</span></div></td>
+              <td class="px-4 py-3 text-gray-600 tabular-nums">${r[2]}</td>
+              <td class="px-4 py-3 text-gray-600 tabular-nums">${r[3]}</td>
+              <td class="px-4 py-3 text-gray-600 tabular-nums">${r[4]}</td>
+              <td class="px-4 py-3 text-gray-600 tabular-nums">${r[5]}</td>
+              <td class="px-4 py-3">${statusBadge(r[6])}</td>
+            </tr>`).join('');
+
+      document.getElementById('timesheet-table').innerHTML = `
+        <div class="overflow-x-auto rounded-xl border border-gray-200 bg-white/70 backdrop-blur-sm">
+          <table class="w-full text-sm">
+            <thead class="bg-gradient-to-r from-indigo-50 to-cyan-50 text-gray-700">
+              <tr>${headers.map(h => `<th class="px-4 py-3 text-left font-semibold">${h}</th>`).join('')}</tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">${body}</tbody>
+          </table>
+        </div>`;
+    }
+
+    // ============ LEAVE (role-aware) ============
+    const leaveAdmin = [
+      // [Name, gradient, Type, Start, End, Days, Reason, Status]
+      ['Juan dela Cruz',     'from-blue-400 to-cyan-500',       'Sick Leave', 'Nov 12',  'Nov 13',  '2 days',  'Flu',                'pending'],
+      ['Maria Santos',       'from-pink-400 to-purple-500',     'Vacation',   'Nov 20',  'Nov 25',  '5 days',  'Family trip',        'pending'],
+      ['Pedro Reyes',        'from-emerald-400 to-teal-500',    'Emergency',  'Nov 11',  'Nov 11',  '1 day',   'Personal matter',    'pending'],
+      ['Ana Lim',            'from-amber-400 to-orange-500',    'Maternity',  'Dec 01',  'Feb 28',  '90 days', 'Maternity leave',    'approved'],
+      ['Sample Worker',      'from-purple-400 to-pink-500',     'Vacation',   'Oct 15',  'Oct 18',  '3 days',  'Holiday with family','approved'],
+      ['Demo Employee #007', 'from-indigo-400 to-cyan-500',     'Sick Leave', 'Oct 02',  'Oct 02',  '1 day',   'Headache',           'rejected'],
+    ];
+    const leaveSelf = [
+      // [Type, Start, End, Days, Reason, Status]
+      ['Vacation',   'Nov 20', 'Nov 25', '5 days', 'Family trip',           'pending'],
+      ['Sick Leave', 'Oct 15', 'Oct 15', '1 day',  'Headache',              'approved'],
+      ['Vacation',   'Aug 12', 'Aug 14', '3 days', 'Long weekend',          'approved'],
+      ['Emergency',  'Jul 03', 'Jul 03', '1 day',  'Personal matter',       'approved'],
+      ['Sick Leave', 'Jun 08', 'Jun 09', '2 days', 'Flu',                   'approved'],
+      ['Vacation',   'May 01', 'May 03', '3 days', 'Holiday with family',   'rejected'],
+    ];
+
+    function renderLeaveStats() {
+      const isAdmin = currentRole === 'admin';
+      const totals = isAdmin
+        ? { total: 12, pending: 3, approved: 7, upcoming: 2, label4: 'UPCOMING' }
+        : { total: 6,  pending: 1, approved: 4, upcoming: 1, label4: 'REJECTED' };
+      const fourth = isAdmin
+        ? { dot: 'bg-purple-500', label: 'UPCOMING', val: totals.upcoming }
+        : { dot: 'bg-red-500',    label: 'REJECTED', val: 1 };
+      document.getElementById('leave-stats').innerHTML = `
+        <div class="p-4 rounded-xl bg-white/70 border border-gray-200"><div class="flex items-center gap-2 text-xs font-semibold text-gray-500"><span class="w-2 h-2 rounded-full bg-blue-500"></span>TOTAL</div><div class="text-2xl font-extrabold text-gray-900 mt-1">${totals.total}</div></div>
+        <div class="p-4 rounded-xl bg-white/70 border border-gray-200"><div class="flex items-center gap-2 text-xs font-semibold text-gray-500"><span class="w-2 h-2 rounded-full bg-yellow-400"></span>PENDING</div><div class="text-2xl font-extrabold text-gray-900 mt-1">${totals.pending}</div></div>
+        <div class="p-4 rounded-xl bg-white/70 border border-gray-200"><div class="flex items-center gap-2 text-xs font-semibold text-gray-500"><span class="w-2 h-2 rounded-full bg-green-500"></span>APPROVED</div><div class="text-2xl font-extrabold text-gray-900 mt-1">${totals.approved}</div></div>
+        <div class="p-4 rounded-xl bg-white/70 border border-gray-200"><div class="flex items-center gap-2 text-xs font-semibold text-gray-500"><span class="w-2 h-2 rounded-full ${fourth.dot}"></span>${fourth.label}</div><div class="text-2xl font-extrabold text-gray-900 mt-1">${fourth.val}</div></div>`;
+    }
+
+    function renderLeave() {
+      renderLeaveStats();
+      const isAdmin = currentRole === 'admin';
+      const headers = isAdmin
+        ? ['Employee', 'Type', 'Start', 'End', 'Days', 'Reason', 'Status']
+        : ['Type', 'Start', 'End', 'Days', 'Reason', 'Status', ''];
+
+      const body = isAdmin
+        ? leaveAdmin.map(r => `
+            <tr class="hover:bg-indigo-50/40">
+              <td class="px-4 py-3"><div class="flex items-center gap-2">${avatar(r[0], r[1])}<span class="font-medium text-gray-800">${r[0]}</span></div></td>
+              <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">${r[2]}</span></td>
+              <td class="px-4 py-3 text-gray-600">${r[3]}</td>
+              <td class="px-4 py-3 text-gray-600">${r[4]}</td>
+              <td class="px-4 py-3 text-gray-600">${r[5]}</td>
+              <td class="px-4 py-3 text-gray-600 truncate max-w-xs">${r[6]}</td>
+              <td class="px-4 py-3">
+                ${r[7] === 'pending'
+                  ? `<div class="flex gap-1.5">
+                      <button class="px-2.5 py-1 rounded-lg bg-green-500 hover:bg-green-600 text-white text-xs font-semibold">Approve</button>
+                      <button class="px-2.5 py-1 rounded-lg bg-red-500 hover:bg-red-600 text-white text-xs font-semibold">Decline</button>
+                    </div>`
+                  : statusBadge(r[7])}
+              </td>
+            </tr>`).join('')
+        : leaveSelf.map(r => `
+            <tr class="hover:bg-indigo-50/40">
+              <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">${r[0]}</span></td>
+              <td class="px-4 py-3 text-gray-600">${r[1]}</td>
+              <td class="px-4 py-3 text-gray-600">${r[2]}</td>
+              <td class="px-4 py-3 text-gray-600">${r[3]}</td>
+              <td class="px-4 py-3 text-gray-600 truncate max-w-xs">${r[4]}</td>
+              <td class="px-4 py-3">${statusBadge(r[5])}</td>
+              <td class="px-4 py-3 text-right">
+                ${r[5] === 'pending'
+                  ? `<button class="px-2.5 py-1 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs font-semibold">Cancel</button>`
+                  : '<span class="text-xs text-gray-400">—</span>'}
+              </td>
+            </tr>`).join('');
+
+      document.getElementById('leave-table').innerHTML = `
+        <div class="overflow-x-auto rounded-xl border border-gray-200 bg-white/70 backdrop-blur-sm">
+          <table class="w-full text-sm">
+            <thead class="bg-gradient-to-r from-indigo-50 to-cyan-50 text-gray-700">
+              <tr>${headers.map(h => `<th class="px-4 py-3 text-left font-semibold">${h}</th>`).join('')}</tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">${body}</tbody>
+          </table>
+        </div>`;
+    }
+
+    // ============ PAYROLL ROWS ============
+    const peso = (n) => '₱' + n.toLocaleString('en-PH', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    document.getElementById('payroll-rows').innerHTML = [
+      ['Maria Santos',       'from-pink-400 to-purple-500',     'Senior Developer', 65000, 5000, 8200],
+      ['Juan dela Cruz',     'from-blue-400 to-cyan-500',       'HR Officer',       42000, 3500, 5100],
+      ['Pedro Reyes',        'from-emerald-400 to-teal-500',    'QA Engineer',      48000, 3500, 5800],
+      ['Ana Lim',            'from-amber-400 to-orange-500',    'UI/UX Designer',   52000, 3500, 6300],
+      ['Sample Worker',      'from-purple-400 to-pink-500',     'Junior Developer', 30000, 2500, 3700],
+      ['Demo Employee #007', 'from-indigo-400 to-cyan-500',     'Intern',           15000, 1000, 1600],
+    ].map(([name, grad, pos, base, allow, ded]) => `
+      <tr class="hover:bg-indigo-50/40">
+        <td class="px-4 py-3"><div class="flex items-center gap-2">${avatar(name, grad)}<span class="font-medium text-gray-800">${name}</span></div></td>
+        <td class="px-4 py-3 text-gray-600">${pos}</td>
+        <td class="px-4 py-3 text-right text-gray-600 tabular-nums">${peso(base)}</td>
+        <td class="px-4 py-3 text-right text-gray-600 tabular-nums">${peso(allow)}</td>
+        <td class="px-4 py-3 text-right text-red-600 tabular-nums">-${peso(ded)}</td>
+        <td class="px-4 py-3 text-right font-bold text-gray-900 tabular-nums">${peso(base + allow - ded)}</td>
+      </tr>`).join('');
+
+    // ============ OVERTIME ROWS ============
+    document.getElementById('overtime-rows').innerHTML = [
+      ['Nov 09', 'Pedro Reyes',    'from-emerald-400 to-teal-500',  '2h 00m', '2 hrs ago',   'pending'],
+      ['Nov 09', 'Maria Santos',   'from-pink-400 to-purple-500',   '1h 30m', 'Yesterday',   'pending'],
+      ['Nov 08', 'Sample Worker',  'from-purple-400 to-pink-500',   '3h 00m', '2 days ago',  'approved'],
+      ['Nov 07', 'Juan dela Cruz', 'from-blue-400 to-cyan-500',     '0h 45m', '3 days ago',  'rejected'],
+    ].map(([date, name, grad, hrs, sub, status]) => `
+      <tr class="hover:bg-indigo-50/40">
+        <td class="px-4 py-3 text-gray-600">${date}</td>
+        <td class="px-4 py-3"><div class="flex items-center gap-2">${avatar(name, grad)}<span class="font-medium text-gray-800">${name}</span></div></td>
+        <td class="px-4 py-3 text-gray-600 tabular-nums">${hrs}</td>
+        <td class="px-4 py-3 text-gray-500 text-xs">${sub}</td>
+        <td class="px-4 py-3">${statusBadge(status)}</td>
+        <td class="px-4 py-3">
+          ${status === 'pending'
+            ? `<div class="flex gap-1.5">
+                <button class="px-2.5 py-1 rounded-lg bg-green-500 hover:bg-green-600 text-white text-xs font-semibold">Approve</button>
+                <button class="px-2.5 py-1 rounded-lg bg-red-500 hover:bg-red-600 text-white text-xs font-semibold">Reject</button>
+              </div>`
+            : '<span class="text-xs text-gray-400">—</span>'}
+        </td>
+      </tr>`).join('');
+
+    // ============ USERS ROWS ============
+    document.getElementById('users-pending-rows').innerHTML = [
+      ['#1042', 'Nov 10, 2025', 'New Hire #1', 'newhire1@demo.test'],
+    ].map(([id, date, name, email]) => `
+      <tr class="hover:bg-indigo-50/40">
+        <td class="px-4 py-3 text-gray-500 font-mono text-xs">${id}</td>
+        <td class="px-4 py-3 text-gray-600">${date}</td>
+        <td class="px-4 py-3 font-medium text-gray-800">${name}</td>
+        <td class="px-4 py-3 text-gray-600">${email}</td>
+        <td class="px-4 py-3"><div class="flex gap-1.5">
+          <button class="px-2.5 py-1 rounded-lg bg-green-500 hover:bg-green-600 text-white text-xs font-semibold">Approve</button>
+          <button class="px-2.5 py-1 rounded-lg bg-red-500 hover:bg-red-600 text-white text-xs font-semibold">Reject</button>
+        </div></td>
+      </tr>`).join('');
+
+    document.getElementById('users-approved-rows').innerHTML = [
+      ['#0001','Maria Santos',      'from-pink-400 to-purple-500',     'msantos',   'maria@demo.test',       'Engineering'],
+      ['#0002','Juan dela Cruz',    'from-blue-400 to-cyan-500',       'jdelacruz', 'juan@demo.test',        'Human Resources'],
+      ['#0003','Pedro Reyes',       'from-emerald-400 to-teal-500',    'preyes',    'pedro@demo.test',       'Quality Assurance'],
+      ['#0004','Ana Lim',           'from-amber-400 to-orange-500',    'alim',      'ana@demo.test',         'Design'],
+      ['#0005','Sample Worker',     'from-purple-400 to-pink-500',     'sworker',   'sample@demo.test',      'Engineering'],
+      ['#0006','Demo Employee #007','from-indigo-400 to-cyan-500',     'demo007',   'demo007@demo.test',     'Operations'],
+    ].map(([id, name, grad, user, email, dept]) => `
+      <tr class="hover:bg-indigo-50/40">
+        <td class="px-4 py-3 text-gray-500 font-mono text-xs">${id}</td>
+        <td class="px-4 py-3"><div class="flex items-center gap-2">${avatar(name, grad)}<span class="font-medium text-gray-800">${name}</span></div></td>
+        <td class="px-4 py-3 text-gray-600 font-mono text-xs">${user}</td>
+        <td class="px-4 py-3 text-gray-600">${email}</td>
+        <td class="px-4 py-3 text-gray-600">${dept}</td>
+        <td class="px-4 py-3 text-right">
+          <button class="p-1.5 rounded-lg hover:bg-indigo-50 text-indigo-600">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+        </td>
+      </tr>`).join('');
+
+    // ============ DEPARTMENTS ============
+    document.getElementById('departments-list').innerHTML = [
+      ['Engineering',       12],
+      ['Human Resources',    4],
+      ['Quality Assurance',  6],
+      ['Design',             3],
+      ['Operations',         8],
+      ['Finance',            5],
+    ].map(([name, count]) => `
+      <li class="flex items-center justify-between px-4 py-3 hover:bg-indigo-50/40">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-500 text-white flex items-center justify-center font-semibold text-sm">${name[0]}</div>
+          <div>
+            <div class="font-medium text-gray-900">${name}</div>
+            <div class="text-xs text-gray-500">${count} employees</div>
+          </div>
+        </div>
+        <div class="flex gap-1">
+          <button class="p-1.5 rounded-lg hover:bg-indigo-50 text-indigo-600">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          <button class="p-1.5 rounded-lg hover:bg-red-50 text-red-600">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>
+          </button>
+        </div>
+      </li>`).join('');
+
+    // ============ INITIAL ============
+    applyRole();
+    renderTimesheet();
+    renderLeave();
+    renderClock();
+  </script>
+</body>
+</html>

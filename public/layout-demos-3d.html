@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Projects Section — 3D Layout Demos</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+  }
+}
+</script>
+<style>
+  :root { --brand: #FF8437; --brand-dark: #f37526; }
+  body { font-family: 'Inter', system-ui, sans-serif; }
+  .font-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+  .font-handwritten { font-family: 'Caveat', cursive; }
+  .demo-section { scroll-margin-top: 80px; }
+
+  /* ---------- 1. Floating holograms ---------- */
+  #scene-floating { width: 100%; height: 600px; display: block; }
+  .floating-stage { position: relative; background: radial-gradient(ellipse at center, #1e293b 0%, #020617 100%); border-radius: 1rem; overflow: hidden; }
+  .floating-overlay { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); color: white; font-size: 12px; opacity: 0.6; pointer-events: none; }
+
+  /* ---------- 2. Coverflow ---------- */
+  #scene-coverflow { width: 100%; height: 520px; display: block; }
+  .coverflow-stage { position: relative; background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 50%, #f8fafc 100%); border-radius: 1rem; overflow: hidden; }
+  .coverflow-controls { position: absolute; bottom: 24px; left: 0; right: 0; display: flex; justify-content: center; gap: 16px; }
+  .coverflow-btn { width: 44px; height: 44px; border-radius: 999px; background: rgba(0,0,0,0.7); color: white; display: inline-flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; backdrop-filter: blur(8px); }
+  .coverflow-btn:hover { background: rgba(0,0,0,0.9); }
+  .coverflow-info { position: absolute; top: 24px; left: 0; right: 0; text-align: center; }
+
+  /* ---------- 3. Pinboard ---------- */
+  .corkboard {
+    background-color: #c9a16f;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(0,0,0,0.06) 1px, transparent 2px),
+      radial-gradient(circle at 70% 60%, rgba(0,0,0,0.05) 1px, transparent 2px),
+      radial-gradient(circle at 40% 80%, rgba(0,0,0,0.04) 1px, transparent 2px),
+      radial-gradient(circle at 85% 15%, rgba(0,0,0,0.05) 1px, transparent 2px);
+    background-size: 60px 60px, 90px 90px, 75px 75px, 110px 110px;
+    box-shadow: inset 0 0 80px rgba(0,0,0,0.3);
+  }
+  .polaroid {
+    background: white;
+    padding: 12px 12px 48px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25), 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s;
+    cursor: grab;
+  }
+  .polaroid:hover {
+    transform: scale(1.08) rotate(0deg) translateY(-8px) !important;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+    z-index: 20;
+  }
+  .polaroid::before {
+    content: '';
+    position: absolute;
+    top: -10px; left: 50%;
+    transform: translateX(-50%) rotate(-2deg);
+    width: 70px; height: 22px;
+    background: rgba(255, 248, 220, 0.7);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+  }
+  .polaroid img { display: block; width: 100%; aspect-ratio: 4/3; object-fit: cover; }
+  .polaroid .caption { font-family: 'Caveat', cursive; font-size: 22px; color: #333; margin-top: 8px; text-align: center; line-height: 1; }
+
+  /* ---------- 4. WebGL liquid grid ---------- */
+  .liquid-card { position: relative; aspect-ratio: 4/3; border-radius: 1rem; overflow: hidden; cursor: pointer; }
+  .liquid-card canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .liquid-card .label { position: absolute; bottom: 0; left: 0; right: 0; padding: 16px; background: linear-gradient(0deg, rgba(0,0,0,0.85), transparent); color: white; pointer-events: none; }
+  .liquid-card .label h4 { font-weight: 700; font-size: 1.125rem; }
+  .liquid-card .label p { font-size: 0.75rem; opacity: 0.8; }
+</style>
+</head>
+<body class="bg-white text-slate-900">
+
+<!-- Nav -->
+<header class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b">
+  <nav class="max-w-7xl mx-auto px-6 py-3 flex items-center gap-6 text-sm font-medium">
+    <span class="font-bold">3D Demos</span>
+    <a href="#floating" class="hover:text-[color:var(--brand)]">1 · Holograms</a>
+    <a href="#coverflow" class="hover:text-[color:var(--brand)]">2 · Coverflow</a>
+    <a href="#pinboard" class="hover:text-[color:var(--brand)]">3 · Pinboard</a>
+    <a href="#liquid" class="hover:text-[color:var(--brand)]">4 · Liquid</a>
+  </nav>
+</header>
+
+<!-- ============================================================ -->
+<!-- 1. FLOATING HOLOGRAMS                                         -->
+<!-- ============================================================ -->
+<section id="floating" class="demo-section py-16 bg-slate-950 text-white">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="mb-8">
+      <p class="text-xs font-mono tracking-widest text-[color:var(--brand)] uppercase mb-2">Direction 01 · Three.js</p>
+      <h2 class="text-4xl font-bold mb-2">Floating Holograms</h2>
+      <p class="text-slate-400">Cards float in 3D space at varied depths. Move your mouse — the camera follows.</p>
+    </div>
+    <div class="floating-stage">
+      <canvas id="scene-floating"></canvas>
+      <div class="floating-overlay">move mouse · scroll to navigate</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 2. 3D COVERFLOW                                               -->
+<!-- ============================================================ -->
+<section id="coverflow" class="demo-section py-16 bg-slate-50">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="mb-8">
+      <p class="text-xs font-mono tracking-widest text-[color:var(--brand)] uppercase mb-2">Direction 02 · Three.js</p>
+      <h2 class="text-4xl font-bold mb-2">3D Coverflow</h2>
+      <p class="text-slate-600">Cards arranged on a cylinder. Drag horizontally or click the arrows to rotate.</p>
+    </div>
+    <div class="coverflow-stage">
+      <canvas id="scene-coverflow"></canvas>
+      <div class="coverflow-info">
+        <p id="coverflow-title" class="text-2xl font-bold">Custom CRM</p>
+        <p id="coverflow-meta" class="text-xs font-mono tracking-widest text-slate-500 uppercase mt-1">Full-Stack</p>
+      </div>
+      <div class="coverflow-controls">
+        <button class="coverflow-btn" id="cf-prev">‹</button>
+        <button class="coverflow-btn" id="cf-next">›</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 3. PINBOARD / POLAROID                                        -->
+<!-- ============================================================ -->
+<section id="pinboard" class="demo-section py-16 bg-white">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="mb-8">
+      <p class="text-xs font-mono tracking-widest text-[color:var(--brand)] uppercase mb-2">Direction 03 · Pure CSS</p>
+      <h2 class="text-4xl font-bold mb-2">Pinboard / Polaroid Wall</h2>
+      <p class="text-slate-600">Scattered photos on a corkboard. Tilted, taped, handwritten captions. Hover to lift.</p>
+    </div>
+    <div class="corkboard rounded-2xl p-12 grid grid-cols-2 md:grid-cols-3 gap-x-12 gap-y-16 relative">
+      <div class="polaroid relative" style="transform: rotate(-3deg);">
+        <img src="https://picsum.photos/seed/crm/600/450" />
+        <p class="caption">Custom CRM ✦</p>
+      </div>
+      <div class="polaroid relative" style="transform: rotate(2deg) translateY(20px);">
+        <img src="https://picsum.photos/seed/elder/600/450" />
+        <p class="caption">Elder Care ♡</p>
+      </div>
+      <div class="polaroid relative" style="transform: rotate(-1deg) translateY(-12px);">
+        <img src="https://picsum.photos/seed/hris/600/450" />
+        <p class="caption">HRIS — capstone</p>
+      </div>
+      <div class="polaroid relative" style="transform: rotate(4deg) translateY(8px);">
+        <img src="https://picsum.photos/seed/blog/600/450" />
+        <p class="caption">Blog Gallery</p>
+      </div>
+      <div class="polaroid relative" style="transform: rotate(-2deg);">
+        <img src="https://picsum.photos/seed/auto/600/450" />
+        <p class="caption">Automation ⚡</p>
+      </div>
+      <div class="relative flex items-center justify-center font-handwritten text-3xl text-slate-700" style="transform: rotate(-4deg);">
+        <span>more soon →</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 4. WEBGL LIQUID GRID                                          -->
+<!-- ============================================================ -->
+<section id="liquid" class="demo-section py-16 bg-slate-50">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="mb-8">
+      <p class="text-xs font-mono tracking-widest text-[color:var(--brand)] uppercase mb-2">Direction 04 · WebGL Shader</p>
+      <h2 class="text-4xl font-bold mb-2">Liquid Hover Grid</h2>
+      <p class="text-slate-600">Looks like a normal grid — until you hover. Each card distorts via a fragment shader.</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="liquid-grid"></div>
+  </div>
+</section>
+
+<footer class="py-12 text-center text-sm text-slate-500 border-t">
+  Pick a flavor and I'll port it into <code class="bg-slate-100 px-2 py-0.5 rounded">Projects.tsx</code>.
+</footer>
+
+<!-- ============================================================ -->
+<!-- THREE.JS SCRIPTS                                              -->
+<!-- ============================================================ -->
+<script type="module">
+import * as THREE from 'three';
+
+const projects = [
+  { title: 'Custom CRM',   image: 'https://picsum.photos/seed/crm/800/600',   meta: 'Full-Stack' },
+  { title: 'Elder Care',   image: 'https://picsum.photos/seed/elder/800/600', meta: 'Frontend'   },
+  { title: 'HRIS',         image: 'https://picsum.photos/seed/hris/800/600',  meta: 'Frontend'   },
+  { title: 'Blog Gallery', image: 'https://picsum.photos/seed/blog/800/600',  meta: 'CMS'        },
+  { title: 'Automation',   image: 'https://picsum.photos/seed/auto/800/600',  meta: 'Automation' },
+];
+
+// Helper to lazy-init scenes when they enter viewport
+function lazyInit(el, init) {
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) {
+        init();
+        io.disconnect();
+      }
+    });
+  }, { rootMargin: '100px' });
+  io.observe(el);
+}
+
+// ============================================================
+// 1. FLOATING HOLOGRAMS
+// ============================================================
+function initFloating() {
+  const canvas = document.getElementById('scene-floating');
+  const w = () => canvas.clientWidth;
+  const h = () => canvas.clientHeight;
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, w() / h(), 0.1, 100);
+  camera.position.set(0, 0, 8);
+
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(w(), h(), false);
+
+  const loader = new THREE.TextureLoader();
+  loader.crossOrigin = 'anonymous';
+
+  // Floating cards
+  const cards = [];
+  const positions = [
+    { x: -3.2, y:  1.2, z:  0.0, rot:  0.05 },
+    { x: -1.0, y: -1.5, z: -1.0, rot: -0.04 },
+    { x:  0.5, y:  1.8, z: -2.0, rot:  0.03 },
+    { x:  2.6, y: -0.4, z: -0.5, rot: -0.06 },
+    { x:  3.8, y:  1.6, z: -2.5, rot:  0.04 },
+  ];
+
+  projects.forEach((p, i) => {
+    const tex = loader.load(p.image);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    const geo = new THREE.PlaneGeometry(1.6, 1.2);
+    const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, opacity: 0.92 });
+    const mesh = new THREE.Mesh(geo, mat);
+    const pos = positions[i];
+    mesh.position.set(pos.x, pos.y, pos.z);
+    mesh.rotation.z = pos.rot;
+    mesh.userData = { baseY: pos.y, phase: i * 1.3 };
+    scene.add(mesh);
+    cards.push(mesh);
+
+    // Glow border
+    const edges = new THREE.EdgesGeometry(geo);
+    const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0xff8437, transparent: true, opacity: 0.5 }));
+    mesh.add(line);
+  });
+
+  // Particles
+  const pCount = 400;
+  const pGeo = new THREE.BufferGeometry();
+  const pPos = new Float32Array(pCount * 3);
+  for (let i = 0; i < pCount; i++) {
+    pPos[i*3]   = (Math.random() - 0.5) * 20;
+    pPos[i*3+1] = (Math.random() - 0.5) * 12;
+    pPos[i*3+2] = (Math.random() - 0.5) * 10 - 2;
+  }
+  pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+  const pMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.04, transparent: true, opacity: 0.6 });
+  const points = new THREE.Points(pGeo, pMat);
+  scene.add(points);
+
+  // Mouse parallax
+  const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
+  canvas.addEventListener('mousemove', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    mouse.tx = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+    mouse.ty = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+  });
+
+  // Resize
+  window.addEventListener('resize', () => {
+    camera.aspect = w() / h();
+    camera.updateProjectionMatrix();
+    renderer.setSize(w(), h(), false);
+  });
+
+  let running = true;
+  const io = new IntersectionObserver((entries) => entries.forEach(e => running = e.isIntersecting));
+  io.observe(canvas);
+
+  const clock = new THREE.Clock();
+  function animate() {
+    requestAnimationFrame(animate);
+    if (!running) return;
+    const t = clock.getElapsedTime();
+
+    mouse.x += (mouse.tx - mouse.x) * 0.05;
+    mouse.y += (mouse.ty - mouse.y) * 0.05;
+
+    camera.position.x = mouse.x * 0.6;
+    camera.position.y = -mouse.y * 0.4;
+    camera.lookAt(0, 0, -1);
+
+    cards.forEach((c) => {
+      c.position.y = c.userData.baseY + Math.sin(t + c.userData.phase) * 0.15;
+      c.rotation.y = Math.sin(t * 0.5 + c.userData.phase) * 0.08;
+    });
+
+    points.rotation.y = t * 0.02;
+
+    renderer.render(scene, camera);
+  }
+  animate();
+}
+
+// ============================================================
+// 2. COVERFLOW (3D cylinder)
+// ============================================================
+function initCoverflow() {
+  const canvas = document.getElementById('scene-coverflow');
+  const titleEl = document.getElementById('coverflow-title');
+  const metaEl  = document.getElementById('coverflow-meta');
+  const w = () => canvas.clientWidth;
+  const h = () => canvas.clientHeight;
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, w() / h(), 0.1, 100);
+  camera.position.set(0, 0, 6);
+
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(w(), h(), false);
+
+  const loader = new THREE.TextureLoader();
+  loader.crossOrigin = 'anonymous';
+
+  const group = new THREE.Group();
+  scene.add(group);
+
+  const radius = 4;
+  const angleStep = (Math.PI * 2) / projects.length;
+
+  const cards = projects.map((p, i) => {
+    const tex = loader.load(p.image);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    const geo = new THREE.PlaneGeometry(2.2, 1.5);
+    const mat = new THREE.MeshBasicMaterial({ map: tex });
+    const mesh = new THREE.Mesh(geo, mat);
+    const angle = i * angleStep;
+    mesh.position.set(Math.sin(angle) * radius, 0, -Math.cos(angle) * radius + radius);
+    mesh.lookAt(new THREE.Vector3(0, 0, radius));
+    mesh.userData = { angle, project: p, index: i };
+    group.add(mesh);
+
+    // Reflection (simple: mirror plane below)
+    const refMat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, opacity: 0.2 });
+    const ref = new THREE.Mesh(geo, refMat);
+    ref.position.set(mesh.position.x, mesh.position.y - 1.55, mesh.position.z);
+    ref.rotation.copy(mesh.rotation);
+    ref.scale.y = -1;
+    group.add(ref);
+
+    return mesh;
+  });
+
+  let targetRotation = 0;
+  let currentRotation = 0;
+  let activeIndex = 0;
+
+  function setActive(i) {
+    activeIndex = ((i % projects.length) + projects.length) % projects.length;
+    targetRotation = -activeIndex * angleStep;
+    titleEl.textContent = projects[activeIndex].title;
+    metaEl.textContent  = projects[activeIndex].meta;
+  }
+
+  document.getElementById('cf-prev').addEventListener('click', () => setActive(activeIndex - 1));
+  document.getElementById('cf-next').addEventListener('click', () => setActive(activeIndex + 1));
+
+  // Drag
+  let dragStart = null;
+  let rotStart = 0;
+  canvas.addEventListener('pointerdown', (e) => {
+    dragStart = e.clientX;
+    rotStart = targetRotation;
+    canvas.setPointerCapture(e.pointerId);
+  });
+  canvas.addEventListener('pointermove', (e) => {
+    if (dragStart === null) return;
+    const dx = e.clientX - dragStart;
+    targetRotation = rotStart + (dx / 200);
+  });
+  canvas.addEventListener('pointerup', () => {
+    if (dragStart === null) return;
+    dragStart = null;
+    const snapped = Math.round(targetRotation / angleStep);
+    setActive(-snapped);
+  });
+
+  window.addEventListener('resize', () => {
+    camera.aspect = w() / h();
+    camera.updateProjectionMatrix();
+    renderer.setSize(w(), h(), false);
+  });
+
+  let running = true;
+  const io = new IntersectionObserver((entries) => entries.forEach(e => running = e.isIntersecting));
+  io.observe(canvas);
+
+  function animate() {
+    requestAnimationFrame(animate);
+    if (!running) return;
+    currentRotation += (targetRotation - currentRotation) * 0.1;
+    group.rotation.y = currentRotation;
+
+    // Scale up the active card
+    cards.forEach((mesh) => {
+      const angDiff = ((mesh.userData.angle + currentRotation) + Math.PI) % (Math.PI * 2) - Math.PI;
+      const focus = 1 - Math.min(Math.abs(angDiff) / 0.6, 1);
+      mesh.scale.setScalar(1 + focus * 0.25);
+    });
+
+    renderer.render(scene, camera);
+  }
+  animate();
+}
+
+// ============================================================
+// 4. LIQUID HOVER GRID
+// ============================================================
+function initLiquidCard(container, project) {
+  const w = () => container.clientWidth;
+  const h = () => container.clientHeight;
+  const canvas = document.createElement('canvas');
+  container.appendChild(canvas);
+
+  const labelEl = document.createElement('div');
+  labelEl.className = 'label';
+  labelEl.innerHTML = `<h4>${project.title}</h4><p>${project.meta}</p>`;
+  container.appendChild(labelEl);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 10);
+  camera.position.z = 1;
+
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  const loader = new THREE.TextureLoader();
+  loader.crossOrigin = 'anonymous';
+  const tex = loader.load(project.image);
+  tex.colorSpace = THREE.SRGBColorSpace;
+
+  const uniforms = {
+    uTex:    { value: tex },
+    uTime:   { value: 0 },
+    uMouse:  { value: new THREE.Vector2(0.5, 0.5) },
+    uHover:  { value: 0 },
+  };
+
+  const material = new THREE.ShaderMaterial({
+    uniforms,
+    vertexShader: `
+      varying vec2 vUv;
+      void main() {
+        vUv = uv;
+        gl_Position = vec4(position, 1.0);
+      }
+    `,
+    fragmentShader: `
+      uniform sampler2D uTex;
+      uniform float uTime;
+      uniform float uHover;
+      uniform vec2 uMouse;
+      varying vec2 vUv;
+
+      void main() {
+        vec2 uv = vUv;
+        float dist = distance(uv, uMouse);
+        float ripple = sin(dist * 30.0 - uTime * 3.0) * 0.02 * uHover * smoothstep(0.5, 0.0, dist);
+        vec2 dir = normalize(uv - uMouse + 0.0001);
+        uv += dir * ripple;
+
+        // Slight chromatic aberration on hover
+        float rOff = 0.004 * uHover;
+        vec4 col;
+        col.r = texture2D(uTex, uv + dir * rOff).r;
+        col.g = texture2D(uTex, uv).g;
+        col.b = texture2D(uTex, uv - dir * rOff).b;
+        col.a = 1.0;
+
+        gl_FragColor = col;
+      }
+    `,
+  });
+
+  const geo = new THREE.PlaneGeometry(2, 2);
+  const mesh = new THREE.Mesh(geo, material);
+  scene.add(mesh);
+
+  function resize() { renderer.setSize(w(), h(), false); }
+  resize();
+  window.addEventListener('resize', resize);
+
+  container.addEventListener('mousemove', (e) => {
+    const rect = container.getBoundingClientRect();
+    uniforms.uMouse.value.set((e.clientX - rect.left) / rect.width, 1.0 - (e.clientY - rect.top) / rect.height);
+  });
+  container.addEventListener('mouseenter', () => { uniforms._target = 1; });
+  container.addEventListener('mouseleave', () => { uniforms._target = 0; });
+
+  let running = true;
+  const io = new IntersectionObserver((entries) => entries.forEach(e => running = e.isIntersecting));
+  io.observe(canvas);
+
+  const clock = new THREE.Clock();
+  function animate() {
+    requestAnimationFrame(animate);
+    if (!running) return;
+    uniforms.uTime.value = clock.getElapsedTime();
+    const target = uniforms._target ?? 0;
+    uniforms.uHover.value += (target - uniforms.uHover.value) * 0.1;
+    renderer.render(scene, camera);
+  }
+  animate();
+}
+
+function initLiquid() {
+  const grid = document.getElementById('liquid-grid');
+  projects.forEach((p) => {
+    const card = document.createElement('div');
+    card.className = 'liquid-card shadow-lg';
+    grid.appendChild(card);
+    initLiquidCard(card, p);
+  });
+}
+
+// ============================================================
+// LAZY INIT
+// ============================================================
+lazyInit(document.getElementById('scene-floating'),  initFloating);
+lazyInit(document.getElementById('scene-coverflow'), initCoverflow);
+lazyInit(document.getElementById('liquid-grid'),     initLiquid);
+</script>
+
+</body>
+</html>
