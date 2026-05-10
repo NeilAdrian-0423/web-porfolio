@@ -8,6 +8,7 @@ import {
 } from '@fluentui/react-icons';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { yearsOfExperience, currentYear } from '@/lib/utils';
 
 // Social icons (Fluent UI doesn't include brand logos)
 const GithubIcon = ({ className }: { className?: string }) => (
@@ -68,7 +69,7 @@ const Footer: React.FC = () => {
               <span className="text-xl font-bold">Neil Adrian Balolong</span>
             </div>
             <p className="mb-4 leading-relaxed text-slate-400">
-              Full Stack Web Developer with 2+ years of experience in Laravel, React, Vue.js,
+              Full Stack Web Developer with {yearsOfExperience()}+ years of experience in Laravel, React, Vue.js,
               and DevOps. Based in Davao City, Philippines.
             </p>
             <div className="flex space-x-4">
@@ -176,7 +177,7 @@ const Footer: React.FC = () => {
             >
               <Heart24Filled className="w-4 h-4 text-red-500" />
             </motion.div>
-            <span>by Neil Adrian Balolong • © 2025 All rights reserved.</span>
+            <span>by Neil Adrian Balolong • © {currentYear()} All rights reserved.</span>
           </p>
         </motion.div>
       </div>

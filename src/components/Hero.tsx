@@ -7,6 +7,7 @@ import {
   Mail24Regular
 } from '@fluentui/react-icons';
 import { Button } from '@/components/ui/button';
+import { yearsOfExperience } from '@/lib/utils';
 
 // Simple SVG icons for social media (Fluent UI doesn't include brand logos)
 const GithubIcon = ({ className }: { className?: string }) => (
@@ -229,7 +230,7 @@ const Hero: React.FC<HeroProps> = ({ onAssetLoaded, isLoaded = false }) => {
                 className="grid max-w-2xl grid-cols-1 gap-8 mx-auto mb-12 sm:grid-cols-3"
               >
                 {[
-                  { number: "2+", label: "Years Experience" },
+                  { number: `${yearsOfExperience()}+`, label: "Years Experience" },
                   { number: "35+", label: "Projects Completed" },
                   { number: "100%", label: "Client Satisfaction" },
                 ].map((stat, index) => (
