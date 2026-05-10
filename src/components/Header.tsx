@@ -9,6 +9,7 @@ import {
   Briefcase24Regular,
   Mail24Regular,
   // Clock24Regular
+  Flash24Filled,
 } from '@fluentui/react-icons';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -50,6 +51,7 @@ const Header: React.FC = () => {
     { id: 'about', label: 'About', icon: Person24Regular },
     // { id: 'experience', label: 'Experience', icon: Clock24Regular },
     { id: 'projects', label: 'Projects', icon: Briefcase24Regular },
+    { id: 'ai-projects', label: 'AI Projects', icon: Flash24Filled },
     { id: 'contact', label: 'Contact', icon: Mail24Regular },
   ];
 
@@ -61,7 +63,7 @@ const Header: React.FC = () => {
       className={cn(
         "fixed top-0 w-full z-50 transition-all duration-300",
         isScrolled
-          ? "bg-background/95 backdrop-blur-sm border-b shadow-sm"
+          ? "bg-slate-950/85 backdrop-blur-md border-b border-white/10 shadow-[0_8px_30px_-10px_rgba(0,0,0,0.5)]"
           : "bg-transparent"
       )}
     >
@@ -72,14 +74,8 @@ const Header: React.FC = () => {
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 400, damping: 10 }}
           >
-            <Code24Filled className={cn(
-              "h-8 w-8 transition-colors duration-300",
-              isScrolled ? "text-[#FF8437]" : "text-white"
-            )} />
-            <span className={cn(
-              "text-xl font-bold transition-colors duration-300",
-              isScrolled ? "text-foreground" : "text-white"
-            )}>
+            <Code24Filled className="h-8 w-8 text-[#FF8437] transition-colors duration-300" />
+            <span className="text-xl font-bold text-white transition-colors duration-300">
               Neil Adrian Balolong
             </span>
           </motion.div>
@@ -96,12 +92,7 @@ const Header: React.FC = () => {
                 <Button
                   variant="ghost"
                   onClick={() => scrollToSection(id)}
-                  className={cn(
-                    "flex items-center space-x-2 transition-all duration-200",
-                    isScrolled
-                      ? "text-[#FF8437] hover:text-foreground hover:bg-accent"
-                      : "text-white/80 hover:text-white hover:bg-white/10"
-                  )}
+                  className="flex items-center space-x-2 transition-all duration-200 text-white/70 hover:text-[#FF8437] hover:bg-white/5"
                 >
                   <Icon className="w-5 h-5" />
                   <span>{label}</span>
@@ -115,10 +106,7 @@ const Header: React.FC = () => {
             variant="ghost"
             size="icon"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className={cn(
-              "md:hidden",
-              isScrolled ? "text-foreground" : "text-white"
-            )}
+            className="md:hidden text-white hover:bg-white/10"
           >
             <AnimatePresence mode="wait">
               <motion.div
@@ -143,7 +131,7 @@ const Header: React.FC = () => {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="border-b md:hidden bg-background/95 backdrop-blur-sm"
+            className="border-b border-white/10 md:hidden bg-slate-950/95 backdrop-blur-md"
           >
             <div className="px-4 py-2 space-y-1">
               {navItems.map(({ id, label, icon: Icon }, index) => (
@@ -156,7 +144,7 @@ const Header: React.FC = () => {
                   <Button
                     variant="ghost"
                     onClick={() => scrollToSection(id)}
-                    className="justify-start w-full space-x-2 text-muted-foreground hover:text-foreground hover:bg-accent"
+                    className="justify-start w-full space-x-2 text-slate-300 hover:text-[#FF8437] hover:bg-white/5"
                   >
                     <Icon className="w-4 h-4" />
                     <span>{label}</span>
